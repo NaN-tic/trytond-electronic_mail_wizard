@@ -5,7 +5,7 @@ import mimetypes
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
-from email.utils import formatdate
+from email.utils import formatdate, make_msgid
 from email import Encoders
 from email.header import Header
 
@@ -31,11 +31,11 @@ class TemplateEmailStart(ModelView):
     cc = fields.Char('CC')
     bcc = fields.Char('BCC')
     subject = fields.Char('Subject', required=True)
-    plain = fields.Text('Plain Text Body', required=True)
+    plain = fields.Text('Plain Text Body')
+    html = fields.Text('HTML Text Body')
     total = fields.Integer('Total', readonly=True,
         help='Total emails to send')
     template = fields.Many2One("electronic.mail.template", 'Template')
-    model = fields.Many2One('ir.model', 'Model', required=True)
 
 
 class TemplateEmailResult(ModelView):
@@ -82,6 +82,7 @@ class GenerateTemplateEmail(Wizard):
         Template = Pool().get('electronic.mail.template')
 
         message = MIMEMultipart()
+        message['message_id'] = make_msgid()
         message['date'] = formatdate(localtime=1)
 
         language = Transaction().context.get('language', 'en_US')
@@ -94,15 +95,43 @@ class GenerateTemplateEmail(Wizard):
             message['from'] = template.eval(values['from_'], record)
             message['to'] = template.eval(values['to'], record)
             message['cc'] = template.eval(values['cc'], record)
-            #~ message['bcc'] = template.eval(values['bcc'], record)
+            message['bcc'] = template.eval(values['bcc'], record)
             message['subject'] = Header(template.eval(values['subject'],
                     record), 'utf-8')
 
+            plain = template.eval(values['plain'], record)
+            html = template.eval(values['html'], record)
+            header = """
+                <html>
+                <head><head>
+                <body>
+                """
+            footer = """
+                </body>
+                </html>
+                """
+            html = "%s%s" % (header, html)
+            if template.signature:
+                User = Pool().get('res.user')
+                user = User(Transaction().user)
+                if user.signature_html:
+                    signature = user.signature_html.encode("utf8")
+                    html = '%s<br>--<br>%s' % (html, signature)
+                if user.signature:
+                    signature = user.signature.encode("utf-8")
+                    plain = '%s\n--\n%s' % (plain, signature)
+                    if not user.signature_html:
+                        html = '%s<br>--<br>%s' % (html,
+                            signature.replace('\n', '<br>'))
+            html = "%s%s" % (html, footer)
+            body = MIMEMultipart('alternative')
+            body.attach(MIMEText(plain, 'plain', _charset='utf-8'))
+            body.attach(MIMEText(html, 'html', _charset='utf-8'))
+            message.attach(body)
+
             # Attach reports
             if template.reports:
-                reports = Template.render_reports(
-                    template, record
-                    )
+                reports = Template.render_reports(template, record)
                 for report in reports:
                     ext, data, filename, file_name = report[0:5]
                     if file_name:
@@ -121,18 +150,6 @@ class GenerateTemplateEmail(Wizard):
                     attachment.add_header(
                         'Content-Transfer-Encoding', 'base64')
                     message.attach(attachment)
-
-            plain = template.eval(values['plain'], record)
-            if template.signature:
-                User = Pool().get('res.user')
-                user = User(Transaction().user)
-                if user.signature:
-                    signature = user.signature
-                    plain = '%s\n--\n%s' % (
-                            plain,
-                            signature.encode("utf8"),
-                            )
-            message.attach(MIMEText(plain, _charset='utf-8'))
 
         return message
 
@@ -164,13 +181,13 @@ class GenerateTemplateEmail(Wizard):
         default['from_'] = template.eval(template.from_, record)
         default['total'] = total
         default['template'] = template.id
-        default['model'] = template.model.id
         if total > 1:  # show fields with tags
             default['to'] = template.to
             default['cc'] = template.cc
             default['bcc'] = template.bcc
             default['subject'] = template.subject
             default['plain'] = template.plain
+            default['html'] = template.html
         else:  # show fields with rendered tags
             record = Pool().get(template.model.model)(active_ids[0])
             default['to'] = template.eval(template.to, record)
@@ -179,6 +196,7 @@ class GenerateTemplateEmail(Wizard):
             default['subject'] = template.eval(template.subject,
                 record)
             default['plain'] = template.eval(template.plain, record)
+            default['html'] = template.eval(template.html, record)
         return default
 
     def render_and_send(self):
@@ -186,7 +204,6 @@ class GenerateTemplateEmail(Wizard):
         Mail = pool.get('electronic.mail')
 
         template = self.start.template
-        #~ model = self.start.model
 
         for active_id in Transaction().context.get('active_ids'):
             record = pool.get(template.model.model)(active_id)
@@ -197,9 +214,10 @@ class GenerateTemplateEmail(Wizard):
             values['bcc'] = self.start.bcc
             values['subject'] = self.start.subject
             values['plain'] = self.start.plain
+            values['html'] = self.start.html
 
             emails = []
-            if self.start.to:
+            if self.start.from_:
                 emails += template.eval(self.start.from_, record).split(',')
             if self.start.to:
                 emails += template.eval(self.start.to, record).split(',')
@@ -228,12 +246,8 @@ class GenerateTemplateEmail(Wizard):
 
             email_message = self.render(template, record, values)
 
-            context = {}
-            if values.get('bcc'):
-                context['bcc'] = values.get('bcc')
-
-            electronic_email = Email.create_from_email(
-                email_message, template.mailbox.id, context)
+            electronic_email = Email.create_from_email(email_message,
+                template.mailbox.id)
             Template.send_email(electronic_email, template)
             logging.getLogger('Mail').info(
                 'Send template email: %s - %s' % (template.name, active_id))

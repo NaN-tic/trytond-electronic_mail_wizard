@@ -12,11 +12,16 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <field name="bcc"/>
     <label name="subject"/>
     <field name="subject"/>
-    <label name="plain"/>
-    <field name="plain"/>
+    <notebook>
+        <page name="plain">
+            <field name="plain"/>
+        </page>
+        <page name="html">
+            <field name="html"/>
+        </page>
+    </notebook>
     <separator name="total" colspan="2"/>
     <field name="total" colspan="2"/>
     <newline/>
     <field name="template" invisible="1"/>
-    <field name="model" invisible="1"/>
 </form>
