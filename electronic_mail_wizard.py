@@ -35,6 +35,8 @@ class TemplateEmailStart(ModelView):
     html = fields.Text('HTML Text Body')
     total = fields.Integer('Total', readonly=True,
         help='Total emails to send')
+    message_id = fields.Char('Message-ID')
+    in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
 
 
@@ -82,8 +84,12 @@ class GenerateTemplateEmail(Wizard):
         Template = Pool().get('electronic.mail.template')
 
         message = MIMEMultipart()
-        message['message_id'] = make_msgid()
+        messageid = template.eval(values['message_id'], record)
+        message['message_id'] = messageid or make_msgid()
         message['date'] = formatdate(localtime=1)
+        if values.get('in_reply_to'):
+            message['in_reply_to'] = template.eval(values['in_reply_to'],
+                record)
 
         language = Transaction().context.get('language', 'en_US')
         if template.language:
@@ -182,6 +188,8 @@ class GenerateTemplateEmail(Wizard):
         default['total'] = total
         default['template'] = template.id
         if total > 1:  # show fields with tags
+            default['message_id'] = template.message_id
+            default['in_reply_to'] = template.in_reply_to
             default['to'] = template.to
             default['cc'] = template.cc
             default['bcc'] = template.bcc
@@ -190,6 +198,9 @@ class GenerateTemplateEmail(Wizard):
             default['html'] = template.html
         else:  # show fields with rendered tags
             record = Pool().get(template.model.model)(active_ids[0])
+            default['message_id'] = template.eval(template.message_id, record)
+            default['in_reply_to'] = template.eval(template.in_reply_to,
+                record)
             default['to'] = template.eval(template.to, record)
             default['cc'] = template.eval(template.cc, record)
             default['bcc'] = template.eval(template.bcc, record)
@@ -208,6 +219,9 @@ class GenerateTemplateEmail(Wizard):
         for active_id in Transaction().context.get('active_ids'):
             record = pool.get(template.model.model)(active_id)
             values = {}
+            values['message_id'] = self.start.message_id
+            if self.start.in_reply_to:
+                values['in_reply_to'] = self.start.in_reply_to
             values['from_'] = self.start.from_
             values['to'] = self.start.to
             values['cc'] = self.start.cc
