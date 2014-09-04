@@ -87,6 +87,7 @@ class GenerateTemplateEmail(Wizard):
         messageid = template.eval(values['message_id'], record)
         message['message_id'] = messageid or make_msgid()
         message['date'] = formatdate(localtime=1)
+        message['in_reply_to'] = ""
         if values.get('in_reply_to'):
             message['in_reply_to'] = template.eval(values['in_reply_to'],
                 record)
