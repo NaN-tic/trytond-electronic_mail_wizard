@@ -117,23 +117,27 @@ class GenerateTemplateEmail(Wizard):
                 </body>
                 </html>
                 """
-            html = "%s%s" % (header, html)
+            if html:
+                html = "%s%s" % (header, html)
             if template.signature:
                 User = Pool().get('res.user')
                 user = User(Transaction().user)
-                if user.signature_html:
-                    signature = user.signature_html.encode("utf8")
+                if html and user.signature_html:
+                    signature = user.signature_html.encode('utf8')
                     html = '%s<br>--<br>%s' % (html, signature)
-                if user.signature:
-                    signature = user.signature.encode("utf-8")
+                if plain and user.signature:
+                    signature = user.signature.encode('utf-8')
                     plain = '%s\n--\n%s' % (plain, signature)
-                    if not user.signature_html:
-                        html = '%s<br>--<br>%s' % (html,
+                    if html and not user.signature_html:
+                        html = '%s<br>--<br>%s' % (html.encode('utf-8'),
                             signature.replace('\n', '<br>'))
-            html = "%s%s" % (html, footer)
+            if html:
+            	html = "%s%s" % (html, footer)
             body = MIMEMultipart('alternative')
-            body.attach(MIMEText(plain, 'plain', _charset='utf-8'))
-            body.attach(MIMEText(html, 'html', _charset='utf-8'))
+            if plain:
+            	body.attach(MIMEText(plain, 'plain', _charset='utf-8'))
+            if html:
+            	body.attach(MIMEText(html, 'html', _charset='utf-8'))
             message.attach(body)
 
             # Attach reports
