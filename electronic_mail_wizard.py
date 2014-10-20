@@ -263,16 +263,16 @@ class GenerateTemplateEmail(Wizard):
             template, = Template.browse([template])
             record = Pool().get(template.model.model)(active_id)
 
-            email_message = self.render(template, record, values)
+            mail_message = self.render(template, record, values)
 
-            electronic_email = Email.create_from_email(email_message,
+            electronic_mail = Email.create_from_mail(mail_message,
                 template.mailbox.id)
-            Template.send_email(electronic_email, template)
+            Template.send_mail(electronic_mail, template)
             logging.getLogger('Mail').info(
                 'Send template email: %s - %s' % (template.name, active_id))
 
             Pool().get('electronic.mail.template').add_event(template, record,
-                electronic_email, email_message)  # add event
+                electronic_mail, mail_message)  # add event
             transaction.cursor.commit()
 
 
