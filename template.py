@@ -54,7 +54,7 @@ class Template:
 
     @classmethod
     def delete(cls, templates):
-        cls.delete_wizards(templates)
+        cls.delete_wizards(templates, ensure_create_action=False)
         super(Template, cls).delete(templates)
 
     @classmethod
@@ -92,12 +92,12 @@ class Template:
             keyword.save()
 
     @classmethod
-    def delete_wizards(cls, templates):
+    def delete_wizards(cls, templates, ensure_create_action=True):
         pool = Pool()
         Keyword = pool.get('ir.action.keyword')
         Wizard = pool.get('ir.action.wizard')
         wizards = [t.wizard for t in templates if t.wizard
-            and not t.create_action]
+            and (not ensure_create_action or not t.create_action)]
         if wizards:
             keywords = Keyword.search([
                     ('action', 'in', [w.action for w in wizards]),
