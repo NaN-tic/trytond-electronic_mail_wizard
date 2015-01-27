@@ -85,11 +85,10 @@ class GenerateTemplateEmail(Wizard):
 
         message = MIMEMultipart()
         messageid = template.eval(values['message_id'], record)
-        message['message_id'] = messageid or make_msgid()
-        message['date'] = formatdate(localtime=1)
-        message['in_reply_to'] = ""
+        message['Message-Id'] = messageid or make_msgid()
+        message['Date'] = formatdate(localtime=1)
         if values.get('in_reply_to'):
-            message['in_reply_to'] = template.eval(values['in_reply_to'],
+            message['In-Reply-To'] = template.eval(values['in_reply_to'],
                 record)
 
         language = Transaction().context.get('language', 'en_US')
@@ -99,11 +98,13 @@ class GenerateTemplateEmail(Wizard):
         with Transaction().set_context(language=language):
             template = Template(template.id)
 
-            message['from'] = template.eval(values['from_'], record)
-            message['to'] = template.eval(values['to'], record)
-            message['cc'] = template.eval(values['cc'], record)
-            message['bcc'] = template.eval(values['bcc'], record)
-            message['subject'] = Header(template.eval(values['subject'],
+            message['From'] = template.eval(values['from_'], record)
+            message['To'] = template.eval(values['to'], record)
+            if values.get('cc'):
+                message['Cc'] = template.eval(values['cc'], record)
+            if values.get('bcc'):
+                message['Bcc'] = template.eval(values['bcc'], record)
+            message['Subject'] = Header(template.eval(values['subject'],
                     record), 'utf-8')
 
             plain = template.eval(values['plain'], record)
@@ -203,21 +204,27 @@ class GenerateTemplateEmail(Wizard):
         default['template'] = template.id
         if total > 1:  # show fields with tags
             default['message_id'] = template.message_id
-            default['in_reply_to'] = template.in_reply_to
+            if template.in_reply_to:
+                default['in_reply_to'] = template.in_reply_to
             default['to'] = template.to
-            default['cc'] = template.cc
-            default['bcc'] = template.bcc
+            if template.cc:
+                default['cc'] = template.cc
+            if template.bcc:
+                default['bcc'] = template.bcc
             default['subject'] = template.subject
             default['plain'] = template.plain
             default['html'] = template.html
         else:  # show fields with rendered tags
             record = Pool().get(template.model.model)(active_ids[0])
             default['message_id'] = template.eval(template.message_id, record)
-            default['in_reply_to'] = template.eval(template.in_reply_to,
-                record)
+            if template.in_reply_to:
+                default['in_reply_to'] = template.eval(template.in_reply_to,
+                    record)
             default['to'] = template.eval(template.to, record)
-            default['cc'] = template.eval(template.cc, record)
-            default['bcc'] = template.eval(template.bcc, record)
+            if template.cc:
+                default['cc'] = template.eval(template.cc, record)
+            if template.bcc:
+                default['bcc'] = template.eval(template.bcc, record)
             default['subject'] = template.eval(template.subject,
                 record)
             default['plain'] = template.eval(template.plain, record)
@@ -238,8 +245,10 @@ class GenerateTemplateEmail(Wizard):
                 values['in_reply_to'] = self.start.in_reply_to
             values['from_'] = self.start.from_
             values['to'] = self.start.to
-            values['cc'] = self.start.cc
-            values['bcc'] = self.start.bcc
+            if self.start.cc:
+                values['cc'] = self.start.cc
+            if self.start.bcc:
+                values['bcc'] = self.start.bcc
             values['subject'] = self.start.subject
             values['plain'] = self.start.plain
             values['html'] = self.start.html
