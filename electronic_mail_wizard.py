@@ -194,14 +194,14 @@ class GenerateTemplateEmail(Wizard):
 
         record = Pool().get(template.model.model)(active_ids[0])
         #load data in language when send a record
-        if template.language and total == 1:
+        if template.language:
             language = template.eval(template.language, record)
             with Transaction().set_context(language=language):
                 template = Template(template.id)
 
+        default['template'] = template.id
         default['from_'] = template.eval(template.from_, record)
         default['total'] = total
-        default['template'] = template.id
         if total > 1:  # show fields with tags
             default['message_id'] = template.message_id
             if template.in_reply_to:
@@ -234,24 +234,47 @@ class GenerateTemplateEmail(Wizard):
     def render_and_send(self):
         pool = Pool()
         Mail = pool.get('electronic.mail')
+        Template = pool.get('electronic.mail.template')
 
         template = self.start.template
 
         for active_id in Transaction().context.get('active_ids'):
             record = pool.get(template.model.model)(active_id)
             values = {}
-            values['message_id'] = self.start.message_id
-            if self.start.in_reply_to:
-                values['in_reply_to'] = self.start.in_reply_to
             values['from_'] = self.start.from_
-            values['to'] = self.start.to
-            if self.start.cc:
-                values['cc'] = self.start.cc
-            if self.start.bcc:
-                values['bcc'] = self.start.bcc
-            values['subject'] = self.start.subject
-            values['plain'] = self.start.plain
-            values['html'] = self.start.html
+
+            if self.start.total == 1:
+                values['message_id'] = self.start.message_id
+                values['to'] = self.start.to
+                if self.start.in_reply_to:
+                    values['in_reply_to'] = self.start.in_reply_to
+                if self.start.cc:
+                    values['cc'] = self.start.cc
+                if self.start.bcc:
+                    values['bcc'] = self.start.bcc
+                values['subject'] = self.start.subject
+                values['plain'] = self.start.plain
+                values['html'] = self.start.html
+            else:
+                if template.language:
+                    language = template.eval(template.language, record)
+                    with Transaction().set_context(language=language):
+                        template = Template(template.id)
+                values['message_id'] = template.eval(template.message_id, record)
+                values['to'] = template.eval(template.to, record)
+                in_reply_to = template.eval(template.in_reply_to, record)
+                if in_reply_to:
+                    values['in_reply_to'] = in_reply_to
+                cc = template.eval(template.cc, record)
+                if cc:
+                    values['cc'] = cc
+                bcc = template.eval(template.bcc, record)
+                if bcc:
+                    values['bcc'] = bcc
+                values['subject'] = template.eval(template.subject,
+                    record)
+                values['plain'] = template.eval(template.plain, record)
+                values['html'] = template.eval(template.html, record)
 
             emails = []
             if self.start.from_:
