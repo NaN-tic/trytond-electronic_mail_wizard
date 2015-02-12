@@ -261,14 +261,14 @@ class GenerateTemplateEmail(Wizard):
                     with Transaction().set_context(language=language):
                         template = Template(template.id)
                 values['message_id'] = template.eval(template.message_id, record)
-                values['to'] = template.eval(template.to, record)
+                values['to'] = template.eval(self.start.to, record)
                 in_reply_to = template.eval(template.in_reply_to, record)
                 if in_reply_to:
                     values['in_reply_to'] = in_reply_to
-                cc = template.eval(template.cc, record)
+                cc = template.eval(self.start.cc, record)
                 if cc:
                     values['cc'] = cc
-                bcc = template.eval(template.bcc, record)
+                bcc = template.eval(self.start.bcc, record)
                 if bcc:
                     values['bcc'] = bcc
                 values['subject'] = template.eval(template.subject,
