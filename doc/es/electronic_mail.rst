@@ -1,44 +1,63 @@
 #:after:electronic_mail/electronic_mail:section:configuracion#
 
-===============================
-Asistente de correo electrónico
-===============================
+También es posible enviar estos correos de forma manual desde una pantalla en concreto
+(por ejemplo,desde *facturas* o *pedidos*), por medio del icono *Ejecutar acción*.
 
-Permite relacionar asistentes con plantillas de correo electrónico.
 
-Configuración
-=============
+#:after:electronic_mail_template/electronic_mail:paragraph:plantillas#
 
-Cuando añada una nueva plantilla si marca la opción `Crear Acción` se creará
-una acción en el modelo de la plantilla que permite el envío del correo
-electrónico para los registros seleccionados.
+Podemos marcar también la opción |create_action| para que se nos habilite la posibilidad
+de mandar un correo-e por medio del icono *Ejecutar acción*.
+Más adelante (:ref:`en esta sección <envio-accion>`) veremos como enviar un correo-e por medio
+esta funcionalidad.
 
-.. note:: Una vez generado el asistente, para que esté visible, deberemos
-          cerrar el cliente GTK y volver a identificarnos. Esto es debido a que
-          los botones de la cabezera se encuentran en memória para ir más
-          rápido en las aperturas de las vistas.
+.. warning::
 
-Si selecciona un solo registro, se mostrarà la previsualización previa del
-correo a enviar que podrà modificar. Si se selecciona mas de un registro se
-mostrará una previsualización del correo, con los campos de la plantilla que se
-evaluarán para cada registro.
+   Cuando activemos esta funcionalidad por primera vez deberemos cerrar el cliente
+   Tryton y volver a identificarnos para que se haga efectiva. Esto es debido a que
+   los botones de la cabecera se encuentran en memoria para ir más rápido en las 
+   aperturas de las vistas.
 
-Envío correo
-============
 
-Cuando seleccione un registro, dispone de un asistente para enviar el correo que convertirá
-los datos de la plantilla con la información ya renderizada (si dispone de tags). Por ejemplo si 
-en la plantilla tenemos el tag "${record.number}" ya nos mostrará en el asistente el valor según el registro
-seleccionado, por ejemplo al ser un número de referencia, "V123456".
+#:after:electronic_mail_template/electronic_mail:section:envio_manual#
 
-En el asistente podrá editar el cuerpo del mensaje, como la descripción o remitentes. Simplemente
-propone un formato de correo que posteriormente lo podrá editar si lo desea.
+.. _envio-accion:
 
-El último paso del asistente será enviar, y se generará un correo electrónico a partir de la información
-que hemos introducido en el asistente. No generará un correo a partir de la plantilla, si no del asistente.
+Enviar correo-e por medio de *Ejecutar acción* 
+==============================================
 
-Si en vez de seleccionar un registro decide seleccionar varios registros para enviar el correo, se enviará
-un correo para cada uno pero el contenido del asistente no se visualizará los tags con los información correspondiente.
-En el momento de enviar el correo, los tags serán canviados con la información del registro. Si edita la información
-del asistente y añade nuevos tags, debe de estar seguro que son correctos, ya que en caso contrario, dará error y
-el correo no se enviará (notificando al administrador).
+Cuando tengamos creada una plantilla y accedamos al menú del modelo sobre el 
+que se ha creado, podremos realizar un envío de esta plantilla
+de forma manual por medio del botón *Ejecutar acción*. Cuando cliquemos en 
+el icono, nos aparecerá una opción con el nombre de la plantilla y dándole se
+generará una ventana flotante que actuará de asistente en el envío del 
+correo-e. En ella vendrá reflejada la información ya renderizada de la plantilla 
+(si dispone de *tags*).
+
+.. Note:: Por ejemplo si en la plantilla tenemos el *tag* "${record.number}" ya 
+   nos mostrará en esta ventana el valor según el registro seleccionado. Por 
+   ejemplo, si es un número de referencia, nos aparecerá el número de referencia
+   correspondiente al registro seleccionado.
+   
+.. view:: electronic_mail_wizard.templateemail_start
+
+En esta ventana se puede editar el cuerpo del mensaje, la descripción o 
+los remitentes. Simplemente propone un formato de correo que podremos editar si 
+lo deseamos. Además, en la esquina inferior izquierda nos indicará el total de 
+registros seleccionados y, por tanto, el número de correos-e que se enviarán.
+
+Si en vez de seleccionar un registro decidimos seleccionar varios para 
+enviar el correo, se enviará un correo para cada uno pero en el contenido del
+asistente no se visualizarán los *tags* con la información correspondiente.
+En el momento de enviar el correo, los *tags* serán cambiados con la información
+de cada registro.
+
+.. Note:: Si edita la información del asistente y añade nuevos *tags*, debe 
+   de estar seguro que son correctos, ya que en caso contrario, dará error y el
+   correo no se enviará (notificando al administrador).
+
+El último paso será clicar en *Enviar*, y se generará un correo electrónico
+a partir de la información que hemos introducido en el asistente por cada 
+registro seleccionado.
+
+.. |create_action| field:: electronic.mail.template/create_action
