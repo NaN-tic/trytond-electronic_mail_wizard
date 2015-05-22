@@ -1,4 +1,4 @@
-#:after:electronic_mail/electronic_mail:section:configuration#
+#:after:electronic_mail/electronic_mail:section:configuracion#
 
 ===============================
 Asistente de correo electrónico
