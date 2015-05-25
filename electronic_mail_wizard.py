@@ -6,8 +6,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.utils import formatdate, make_msgid
-from email import Encoders
 from email.header import Header
+from email import Encoders, charset
 
 from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
@@ -137,6 +137,7 @@ class GenerateTemplateEmail(Wizard):
             body = None
             if html and plain:
                 body = MIMEMultipart('alternative')
+            charset.add_charset('utf-8', charset.QP, charset.QP)
             if plain:
                 if body:
             	    body.attach(MIMEText(plain, 'plain', _charset='utf-8'))
