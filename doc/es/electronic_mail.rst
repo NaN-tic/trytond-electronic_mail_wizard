@@ -41,6 +41,8 @@ correo-e. En ella vendrá reflejada la información ya renderizada de la plantil
    
 .. view:: electronic_mail_wizard.templateemail_start
 
+   Vista de la plantilla del correo electrónico
+
 En esta ventana se puede editar el cuerpo del mensaje, la descripción o 
 los remitentes. Simplemente propone un formato de correo que podremos editar si 
 lo deseamos. Además, en la esquina inferior izquierda nos indicará el total de 
