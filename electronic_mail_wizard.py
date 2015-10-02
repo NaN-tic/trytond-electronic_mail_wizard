@@ -13,12 +13,11 @@ from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.transaction import Transaction
 from trytond.pool import Pool
-from trytond import backend
 import threading
 import logging
 
 __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
-    'GenerateTemplateEmail', 'VirtualGenerateTemplateEmail']
+    'GenerateTemplateEmail']
 
 
 class TemplateEmailStart(ModelView):
@@ -316,23 +315,3 @@ class GenerateTemplateEmail(Wizard):
             Pool().get('electronic.mail.template').add_event(template, record,
                 electronic_mail, mail_message)  # add event
             transaction.cursor.commit()
-
-
-class VirtualGenerateTemplateEmail(GenerateTemplateEmail):
-    "Virtual Wizard to Generate Email from template"
-    __name__ = "electronic_mail_wizard.virtual"
-
-    @classmethod
-    def __post_setup__(cls):
-        pool = Pool()
-        Template = pool.get('electronic.mail.template')
-        super(VirtualGenerateTemplateEmail, cls).__post_setup__()
-        #Register all wizard without class
-        TableHandler = backend.get('TableHandler')
-        table = TableHandler(Transaction().cursor, Template,
-            'electronic_mail_wizard')
-        if table.column_exist('create_action'):
-            for template in Template.search([
-                        ('create_action', '=', True),
-                        ]):
-                template.register_electronic_mail_wizard_class()

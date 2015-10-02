@@ -5,7 +5,6 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
-from copy import deepcopy
 
 __all__ = ['Template']
 __metaclass__ = PoolMeta
@@ -22,6 +21,22 @@ class Template:
             'readonly': Eval('create_action', False),
             },
         depends=['create_action'])
+
+    @classmethod
+    def __register__(cls, module_name):
+        super(Template, cls).__register__(module_name)
+
+        # Migration from 3.4: update wiz_name field with generic value
+        Wizard = Pool().get('ir.action.wizard')
+        wizard = Wizard.__table__()
+        cursor = Transaction().cursor
+        cursor.execute(*wizard.select(wizard.id, where=wizard.wiz_name.like(
+                    'electronic_mail_wizard.templateemail_%')))
+        if cursor.fetchone():
+            cursor.execute(*wizard.update([wizard.wiz_name],
+                    ['electronic_mail_wizard.templateemail'],
+                    where=wizard.wiz_name.like(
+                        'electronic_mail_wizard.templateemail_%')))
 
     @staticmethod
     def default_create_action():
@@ -71,12 +86,10 @@ class Template:
                 continue
             wizard = Wizard()
             wizard.name = template.name
-            wizard.wiz_name = ('electronic_mail_wizard.templateemail_%d' %
-                template.id)
+            wizard.wiz_name = 'electronic_mail_wizard.templateemail'
             wizard.save()
             template.wizard = wizard
             template.save()
-            template.register_electronic_mail_wizard_class()
 
             if langs:
                 for lang in langs:
@@ -105,26 +118,3 @@ class Template:
             if keywords:
                 Keyword.delete(keywords)
             Wizard.delete(wizards)
-
-    def register_electronic_mail_wizard_class(self):
-        """
-        Creates a copy class of GenerateTemplateEmail be able to
-        execute the wizard with diferent models.
-        It also add it's in the pool so it's accessible with pool.get
-        """
-        pool = Pool()
-        if not self.wizard:
-            return
-        wiz_name = self.wizard.wiz_name
-        try:
-            pool.get(wiz_name, type='wizard')
-        except KeyError:
-            #pool.get fails when initialitzing the database
-            TemplateEmail = (Pool._pool[Transaction().cursor.database_name]
-                ['wizard']['electronic_mail_wizard.templateemail'])
-
-            attributes = deepcopy(dict(TemplateEmail.__dict__))
-            attributes['__name__'] = str(wiz_name)
-            copy_class = type(str(wiz_name), TemplateEmail.__bases__,
-                attributes)
-            pool.add(copy_class, type='wizard')

@@ -16,5 +16,4 @@ def register():
         module='electronic_mail_wizard', type_='model')
     Pool.register(
         GenerateTemplateEmail,
-        VirtualGenerateTemplateEmail,
         module='electronic_mail_wizard', type_='wizard')
