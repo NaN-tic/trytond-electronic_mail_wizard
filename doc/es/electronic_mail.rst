@@ -4,7 +4,7 @@ También es posible enviar estos correos de forma manual desde una pantalla en c
 (por ejemplo,desde *facturas* o *pedidos*), por medio del icono *Ejecutar acción*.
 
 
-#:after:electronic_mail_template/electronic_mail:paragraph:plantillas#
+#:after:electronic_mail_template/electronic_mail:section:plantillas#
 
 Podemos marcar también la opción |create_action| para que se nos habilite la posibilidad
 de mandar un correo-e por medio del icono *Ejecutar acción*.
