@@ -4,6 +4,8 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
 <form string="Send Email" col="2">
     <label name="from_"/>
     <field name="from_"/>
+    <label name="sender"/>
+    <field name="sender"/>
     <label name="to"/>
     <field name="to"/>
     <label name="cc"/>
