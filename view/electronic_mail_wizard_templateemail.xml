@@ -12,6 +12,8 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <field name="cc"/>
     <label name="bcc"/>
     <field name="bcc"/>
+    <label name="use_tmpl_fields"/>
+    <field name="use_tmpl_fields"/>
     <label name="subject"/>
     <field name="subject"/>
     <notebook>
