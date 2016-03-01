@@ -13,11 +13,17 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.pool import Pool
+from trytond.config import config
+from trytond.tools import grouped_slice
 import threading
 import logging
 
 __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
     'GenerateTemplateEmail']
+
+
+# Determines max connections to database used for the mail send thread
+MAX_DB_CONNECTION = config.getint('database', 'max_connections', 50)
 
 
 class TemplateEmailStart(ModelView):
@@ -157,39 +163,45 @@ class GenerateTemplateEmail(Wizard):
 
         template = self.start.template
 
-        for active_id in Transaction().context.get('active_ids'):
-            record = pool.get(template.model.model)(active_id)
-            #load data in language when send a record
-            if template.language:
-                language = template.eval(template.language, record)
-                with Transaction().set_context(language=language):
-                    template = Template(template.id)
+        records = Transaction().context.get('active_ids')
+        for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
+            threads = []
+            for active_id in sub_records:
+                record = pool.get(template.model.model)(active_id)
+                #load data in language when send a record
+                if template.language:
+                    language = template.eval(template.language, record)
+                    with Transaction().set_context(language=language):
+                        template = Template(template.id)
 
-            values = {
-                'from_': self.start.from_,
-                'sender': self.start.sender,
-                'to': self.start.to,
-                'cc': self.start.cc,
-                'bcc': self.start.bcc,
-                'message_id': self.start.message_id,
-                'in_reply_to': self.start.in_reply_to,
-                }
-            if self.start.use_tmpl_fields:
-                tmpl_fields = ('subject', 'plain', 'html')
-                for field_name in tmpl_fields:
-                    values[field_name] = getattr(template, field_name)
-            else:
-                values.update({
-                    'subject': self.start.subject,
-                    'plain': self.start.plain,
-                    'html': self.start.html,
-                    })
+                values = {
+                    'from_': self.start.from_,
+                    'sender': self.start.sender,
+                    'to': self.start.to,
+                    'cc': self.start.cc,
+                    'bcc': self.start.bcc,
+                    'message_id': self.start.message_id,
+                    'in_reply_to': self.start.in_reply_to,
+                    }
+                if self.start.use_tmpl_fields:
+                    tmpl_fields = ('subject', 'plain', 'html')
+                    for field_name in tmpl_fields:
+                        values[field_name] = getattr(template, field_name)
+                else:
+                    values.update({
+                        'subject': self.start.subject,
+                        'plain': self.start.plain,
+                        'html': self.start.html,
+                        })
 
-            db_name = Transaction().cursor.dbname
-            thread1 = threading.Thread(target=self.render_and_send_thread,
-                args=(db_name, Transaction().user, template, active_id,
-                    values,))
-            thread1.start()
+                db_name = Transaction().cursor.dbname
+                thread1 = threading.Thread(target=self.render_and_send_thread,
+                    args=(db_name, Transaction().user, template, active_id,
+                        values,))
+                threads.append(thread1)
+                thread1.start()
+            for thread in threads:
+                thread.join()
 
     def render_and_send_thread(self, db_name, user, template, active_id,
             values):
