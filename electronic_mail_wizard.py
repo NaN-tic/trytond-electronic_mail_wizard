@@ -28,14 +28,30 @@ class TemplateEmailStart(ModelView):
     to = fields.Char('To', required=True)
     cc = fields.Char('CC')
     bcc = fields.Char('BCC')
-    subject = fields.Char('Subject', required=True)
-    plain = fields.Text('Plain Text Body')
-    html = fields.Text('HTML Text Body')
+    use_tmpl_fields = fields.Boolean('Use temaplte fields')
+    subject = fields.Char('Subject', required=True,
+        states={
+            'readonly': Eval('use_tmpl_fields', False),
+            },
+        depends=['use_tmpl_fields'])
+    plain = fields.Text('Plain Text Body',
+        states={
+            'readonly': Eval('use_tmpl_fields', False),
+            },
+        depends=['use_tmpl_fields'])
+    html = fields.Text('HTML Text Body',
+        states={
+            'readonly': Eval('use_tmpl_fields', False),
+            },
+        depends=['use_tmpl_fields'])
     total = fields.Integer('Total', readonly=True,
         help='Total emails to send')
     message_id = fields.Char('Message-ID')
     in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
+
+    def default_use_tmpl_fields(self, fields):
+        return True
 
 
 class TemplateEmailResult(ModelView):
@@ -135,7 +151,6 @@ class GenerateTemplateEmail(Wizard):
 
     def render_and_send(self):
         pool = Pool()
-        ElectronicMail = Pool().get('electronic.mail')
         Template = pool.get('electronic.mail.template')
 
         template = self.start.template
@@ -149,24 +164,24 @@ class GenerateTemplateEmail(Wizard):
                     template = Template(template.id)
 
             values = {
-                'from_': ElectronicMail.validate_emails(self.start.from_),
-                'sender': ElectronicMail.validate_emails(self.start.sender),
-                'to': ElectronicMail.validate_emails(self.start.to),
-                'cc': ElectronicMail.validate_emails(self.start.cc),
-                'bcc': ElectronicMail.validate_emails(self.start.bcc),
+                'from_': self.start.from_,
+                'sender': self.start.sender,
+                'to': self.start.to,
+                'cc': self.start.cc,
+                'bcc': self.start.bcc,
                 'message_id': self.start.message_id,
                 'in_reply_to': self.start.in_reply_to,
                 }
-            if self.start.total == 1:
+            if self.start.use_tmpl_fields:
+                tmpl_fields = ('subject', 'plain', 'html')
+                for field_name in tmpl_fields:
+                    values[field_name] = getattr(template, field_name)
+            else:
                 values.update({
                     'subject': self.start.subject,
                     'plain': self.start.plain,
                     'html': self.start.html,
                     })
-            else:
-                tmpl_fields = ('subject', 'plain', 'html')
-                for field_name in tmpl_fields:
-                    values[field_name] = getattr(template, field_name)
 
             db_name = Transaction().cursor.dbname
             thread1 = threading.Thread(target=self.render_and_send_thread,
