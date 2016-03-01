@@ -51,7 +51,8 @@ class TemplateEmailStart(ModelView):
     in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
 
-    def default_use_tmpl_fields(self, fields):
+    @staticmethod
+    def default_use_tmpl_fields():
         return True
 
 
