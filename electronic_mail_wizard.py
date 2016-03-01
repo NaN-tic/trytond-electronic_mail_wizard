@@ -11,6 +11,7 @@ from email import Encoders, charset
 from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.transaction import Transaction
+from trytond.pyson import Eval
 from trytond.pool import Pool
 import threading
 import logging
