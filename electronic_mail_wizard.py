@@ -35,7 +35,7 @@ class TemplateEmailStart(ModelView):
     to = fields.Char('To', required=True)
     cc = fields.Char('CC')
     bcc = fields.Char('BCC')
-    use_tmpl_fields = fields.Boolean('Use temaplte fields')
+    use_tmpl_fields = fields.Boolean('Use template fields')
     subject = fields.Char('Subject', required=True,
         states={
             'readonly': Eval('use_tmpl_fields', False),
