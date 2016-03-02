@@ -70,6 +70,10 @@ msgctxt "field:electronic.mail.wizard.templateemail.start,total:"
 msgid "Total"
 msgstr "Total"
 
+msgctxt "field:electronic.mail.wizard.templateemail.start,use_tmpl_fields:"
+msgid "Use template fields"
+msgstr "Utilitza els camps de la plantilla"
+
 msgctxt "field:ir.action.wizard,template:"
 msgid "Template"
 msgstr "Plantilla"
