@@ -5,9 +5,9 @@ from trytond.model import fields
 from trytond.pool import PoolMeta
 
 __all__ = ['ActionWizard']
-__metaclass__ = PoolMeta
+
 
 class ActionWizard:
     __name__ = 'ir.action.wizard'
-
+    __metaclass__ = PoolMeta
     template = fields.One2Many("electronic.mail.template", 'wizard', 'Template')
