@@ -1,26 +1,19 @@
-#This file is part electronic_mail_wizard module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains
-#the full copyright notices and license terms.
-import mimetypes
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email.utils import formatdate, make_msgid
-from email import Encoders, charset
-
-from trytond.model import ModelView, fields
-from trytond.wizard import Wizard, StateTransition, StateView, Button
-from trytond.transaction import Transaction
-from trytond.pyson import Eval
-from trytond.pool import Pool
-from trytond.config import config
-from trytond.tools import grouped_slice
-import threading
+# This file is part electronic_mail_wizard module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 import logging
+import threading
+
+from trytond.config import config
+from trytond.model import ModelView, fields
+from trytond.pool import Pool
+from trytond.pyson import Eval
+from trytond.tools import grouped_slice
+from trytond.transaction import Transaction
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 
 __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
     'GenerateTemplateEmail']
-
 
 # Determines max connections to database used for the mail send thread
 MAX_DB_CONNECTION = config.getint('database', 'max_connections', 50)
@@ -84,9 +77,9 @@ class GenerateTemplateEmail(Wizard):
     def __setup__(cls):
         super(GenerateTemplateEmail, cls).__setup__()
         cls._error_messages.update({
-            'template_deleted': 'This template has been deactivated or '
-                'deleted.',
-            })
+                'template_deleted': (
+                    'This template has been deactivated or deleted.'),
+                })
 
     def default_start(self, fields):
         default = self.render_fields(self.__name__)
@@ -115,7 +108,7 @@ class GenerateTemplateEmail(Wizard):
         total = len(active_ids)
 
         record = Pool().get(template.model.model)(active_ids[0])
-        #load data in language when send a record
+        # load data in language when send a record
         if template.language:
             language = template.eval(template.language, record)
             with Transaction().set_context(language=language):
@@ -168,7 +161,7 @@ class GenerateTemplateEmail(Wizard):
             threads = []
             for active_id in sub_records:
                 record = pool.get(template.model.model)(active_id)
-                #load data in language when send a record
+                # load data in language when send a record
                 if template.language:
                     language = template.eval(template.language, record)
                     with Transaction().set_context(language=language):
