@@ -94,26 +94,26 @@ class GenerateTemplateEmail(Wizard):
         :param name: Str ir.action.wizard
         :return: dicc
         '''
-        default = {}
-
-        Wizard = Pool().get('ir.action.wizard')
-        Template = Pool().get('electronic.mail.template')
-        active_ids = Transaction().context.get('active_ids')
+        pool = Pool()
+        Wizard = pool.get('ir.action.wizard')
+        Template = pool.get('electronic.mail.template')
 
         context = Transaction().context
+        active_ids = context.get('active_ids')
         action_id = context.get('action_id', None)
         wizard = Wizard(action_id)
-        template = (wizard.template and wizard.template[0]
-            or self.raise_user_error('template_deleted'))
+        template = (wizard.template[0] if wizard.template
+            else self.raise_user_error('template_deleted'))
         total = len(active_ids)
 
-        record = Pool().get(template.model.model)(active_ids[0])
+        record = pool.get(template.model.model)(active_ids[0])
         # load data in language when send a record
         if template.language:
             language = template.eval(template.language, record)
             with Transaction().set_context(language=language):
                 template = Template(template.id)
 
+        default = {}
         default['template'] = template.id
         default['from_'] = template.eval(template.from_, record)
         default['total'] = total
@@ -132,7 +132,7 @@ class GenerateTemplateEmail(Wizard):
             default['plain'] = template.plain
             default['html'] = template.html
         else:  # show fields with rendered tags
-            record = Pool().get(template.model.model)(active_ids[0])
+            record = pool.get(template.model.model)(active_ids[0])
             default['message_id'] = template.eval(template.message_id, record)
             if template.in_reply_to:
                 default['in_reply_to'] = template.eval(template.in_reply_to,
@@ -144,8 +144,7 @@ class GenerateTemplateEmail(Wizard):
                 default['cc'] = template.eval(template.cc, record)
             if template.bcc:
                 default['bcc'] = template.eval(template.bcc, record)
-            default['subject'] = template.eval(template.subject,
-                record)
+            default['subject'] = template.eval(template.subject, record)
             default['plain'] = template.eval(template.plain, record)
             default['html'] = template.eval(template.html, record)
         return default
@@ -155,7 +154,6 @@ class GenerateTemplateEmail(Wizard):
         Template = pool.get('electronic.mail.template')
 
         template = self.start.template
-
         records = Transaction().context.get('active_ids')
         for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
             threads = []
@@ -189,21 +187,21 @@ class GenerateTemplateEmail(Wizard):
 
                 db_name = Transaction().database.name
                 thread1 = threading.Thread(target=self.render_and_send_thread,
-                    args=(db_name, Transaction().user, template, active_id,
+                    args=(db_name, Transaction().user, template.id, active_id,
                         values,))
                 threads.append(thread1)
                 thread1.start()
             for thread in threads:
                 thread.join()
 
-    def render_and_send_thread(self, db_name, user, template, active_id,
+    def render_and_send_thread(self, db_name, user_id, template_id, active_id,
             values):
-        with Transaction().start(db_name, user):
+        with Transaction().start(db_name, user_id):
             pool = Pool()
             Email = pool.get('electronic.mail')
             Template = pool.get('electronic.mail.template')
 
-            template, = Template.browse([template])
+            template = Template(template_id)
             record = pool.get(template.model.model)(active_id)
 
             mail_message = Template.render(template, record, values)
@@ -211,8 +209,7 @@ class GenerateTemplateEmail(Wizard):
             electronic_mail = Email.create_from_mail(mail_message,
                 template.mailbox.id)
             Template.send_mail(electronic_mail, template)
-            logging.getLogger('Mail').info(
-                'Send template email: %s - %s' % (template.name, active_id))
+            logging.getLogger('Mail').info('Send template email: %s - %s',
+                template.name, active_id)
 
-            Pool().get('electronic.mail.template').add_event(template, record,
-                electronic_mail, mail_message)  # add event
+            Template.add_event(template, record, electronic_mail, mail_message)
