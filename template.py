@@ -23,12 +23,13 @@ class Template:
 
     @classmethod
     def __register__(cls, module_name):
+        Wizard = Pool().get('ir.action.wizard')
+        wizard = Wizard.__table__()
+
         super(Template, cls).__register__(module_name)
 
         # Migration from 3.4: update wiz_name field with generic value
-        Wizard = Pool().get('ir.action.wizard')
-        wizard = Wizard.__table__()
-        cursor = Transaction().cursor
+        cursor = Transaction().connection.cursor()
         cursor.execute(*wizard.select(wizard.id, where=wizard.wiz_name.like(
                     'electronic_mail_wizard.templateemail_%')))
         if cursor.fetchone():

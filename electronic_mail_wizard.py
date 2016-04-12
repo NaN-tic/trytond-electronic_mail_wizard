@@ -194,7 +194,7 @@ class GenerateTemplateEmail(Wizard):
                         'html': self.start.html,
                         })
 
-                db_name = Transaction().cursor.dbname
+                db_name = Transaction().database.name
                 thread1 = threading.Thread(target=self.render_and_send_thread,
                     args=(db_name, Transaction().user, template, active_id,
                         values,))
@@ -205,7 +205,7 @@ class GenerateTemplateEmail(Wizard):
 
     def render_and_send_thread(self, db_name, user, template, active_id,
             values):
-        with Transaction().start(db_name, user) as transaction:
+        with Transaction().start(db_name, user):
             pool = Pool()
             Email = pool.get('electronic.mail')
             Template = pool.get('electronic.mail.template')
@@ -223,4 +223,3 @@ class GenerateTemplateEmail(Wizard):
 
             Pool().get('electronic.mail.template').add_event(template, record,
                 electronic_mail, mail_message)  # add event
-            transaction.cursor.commit()
