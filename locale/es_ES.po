@@ -1,14 +1,10 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:electronic_mail_wizard.templateemail:"
-msgid "You can select a template in this wizard."
-msgstr "Seleccione una plantilla para esta acción."
-
-msgctxt "error:electronic_mail_wizard.virtual:"
-msgid "You can select a template in this wizard."
-msgstr "Seleccione una plantilla para esta acción."
+msgid "This template has been deactivated or deleted."
+msgstr "Esta plantilla se ha desactivado o eliminado."
 
 msgctxt "field:electronic.mail.template,create_action:"
 msgid "Create Action"
@@ -38,12 +34,20 @@ msgctxt "field:electronic.mail.wizard.templateemail.start,from_:"
 msgid "From"
 msgstr "De"
 
+msgctxt "field:electronic.mail.wizard.templateemail.start,html:"
+msgid "HTML Text Body"
+msgstr "Cuerpo en HTML"
+
 msgctxt "field:electronic.mail.wizard.templateemail.start,id:"
 msgid "ID"
 msgstr "ID"
 
-msgctxt "field:electronic.mail.wizard.templateemail.start,model:"
-msgid "Model"
+msgctxt "field:electronic.mail.wizard.templateemail.start,in_reply_to:"
+msgid "In Repply To"
+msgstr "In Repply To"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,message_id:"
+msgid "Message-ID"
 msgstr "Modelo"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,plain:"
@@ -115,13 +119,5 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,send:"
-msgid "Send"
-msgstr "Enviar"
-
-msgctxt "wizard_button:electronic_mail_wizard.virtual,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:electronic_mail_wizard.virtual,start,send:"
 msgid "Send"
 msgstr "Enviar"
