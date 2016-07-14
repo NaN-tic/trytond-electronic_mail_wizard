@@ -16,7 +16,7 @@ __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
     'GenerateTemplateEmail']
 
 # Determines max connections to database used for the mail send thread
-MAX_DB_CONNECTION = config.getint('database', 'max_connections', 50)
+MAX_DB_CONNECTION = config.getint('database', 'max_connections', default=50)
 
 
 class TemplateEmailStart(ModelView):
