@@ -2,18 +2,18 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from trytond.pool import Pool
-from .electronic_mail_wizard import *
-from .template import *
-from .action import *
+from . import electronic_mail_wizard
+from . import template
+from . import action
 
 
 def register():
     Pool.register(
-        TemplateEmailStart,
-        TemplateEmailResult,
-        ActionWizard,
-        Template,
+        electronic_mail_wizard.TemplateEmailStart,
+        electronic_mail_wizard.TemplateEmailResult,
+        action.ActionWizard,
+        template.Template,
         module='electronic_mail_wizard', type_='model')
     Pool.register(
-        GenerateTemplateEmail,
+        electronic_mail_wizard.GenerateTemplateEmail,
         module='electronic_mail_wizard', type_='wizard')
