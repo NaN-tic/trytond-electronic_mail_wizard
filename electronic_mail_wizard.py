@@ -23,7 +23,8 @@ __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
 
 
 # Determines max connections to database used for the mail send thread
-MAX_DB_CONNECTION = config.getint('database', 'max_connections', 50)
+MAX_DB_CONNECTION = config.getint('database', 'max_connections')
+MAX_SMTP_CONNECTION = config.getint('smtp', 'max_connections')
 
 
 class TemplateEmailStart(ModelView):
@@ -164,7 +165,7 @@ class GenerateTemplateEmail(Wizard):
         template = self.start.template
 
         records = Transaction().context.get('active_ids')
-        for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
+        for sub_records in grouped_slice(records, min(MAX_SMTP_CONNECTION, MAX_DB_CONNECTION)):
             threads = []
             for active_id in sub_records:
                 record = pool.get(template.model.model)(active_id)
