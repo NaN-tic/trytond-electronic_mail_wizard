@@ -1,13 +1,6 @@
 #This file is part electronic_mail_wizard module for Tryton.
 #The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
-import mimetypes
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email.utils import formatdate, make_msgid
-from email import Encoders, charset
-
 from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.transaction import Transaction
@@ -15,7 +8,6 @@ from trytond.pyson import Eval
 from trytond.pool import Pool
 from trytond.config import config
 from trytond.tools import grouped_slice
-import threading
 import logging
 
 __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
@@ -166,7 +158,6 @@ class GenerateTemplateEmail(Wizard):
 
         records = Transaction().context.get('active_ids')
         for sub_records in grouped_slice(records, min(MAX_SMTP_CONNECTION, MAX_DB_CONNECTION)):
-            threads = []
             for active_id in sub_records:
                 record = pool.get(template.model.model)(active_id)
                 #load data in language when send a record
@@ -195,33 +186,14 @@ class GenerateTemplateEmail(Wizard):
                         'html': self.start.html,
                         })
 
-                db_name = Transaction().cursor.dbname
-                thread1 = threading.Thread(target=self.render_and_send_thread,
-                    args=(db_name, Transaction().user, template, active_id,
-                        values,))
-                threads.append(thread1)
-                thread1.start()
-            for thread in threads:
-                thread.join()
+                Email = pool.get('electronic.mail')
+                mail_message = Template.render(template, record, values)
 
-    def render_and_send_thread(self, db_name, user, template, active_id,
-            values):
-        with Transaction().start(db_name, user) as transaction:
-            pool = Pool()
-            Email = pool.get('electronic.mail')
-            Template = pool.get('electronic.mail.template')
+                electronic_mail = Email.create_from_mail(mail_message,
+                    template.mailbox.id)
+                Template.send_mail(electronic_mail, template)
+                logging.getLogger('Mail').info(
+                    'Send template email: %s - %s' % (template.name, active_id))
 
-            template, = Template.browse([template])
-            record = pool.get(template.model.model)(active_id)
-
-            mail_message = Template.render(template, record, values)
-
-            electronic_mail = Email.create_from_mail(mail_message,
-                template.mailbox.id)
-            Template.send_mail(electronic_mail, template)
-            logging.getLogger('Mail').info(
-                'Send template email: %s - %s' % (template.name, active_id))
-
-            Pool().get('electronic.mail.template').add_event(template, record,
-                electronic_mail, mail_message)  # add event
-            transaction.cursor.commit()
+                Template.add_event(template, record, electronic_mail,
+                    mail_message)  # add event
