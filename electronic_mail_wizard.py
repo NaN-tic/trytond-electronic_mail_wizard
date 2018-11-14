@@ -69,7 +69,7 @@ class GenerateTemplateEmail(Wizard):
     start = StateView('electronic.mail.wizard.templateemail.start',
         'electronic_mail_wizard.templateemail_start', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Send', 'send', 'tryton-ok', default=True),
+            Button('Send', 'send', 'tryton-ok'),
             ])
     send = StateTransition()
 
@@ -83,6 +83,12 @@ class GenerateTemplateEmail(Wizard):
 
     def default_start(self, fields):
         default = self.render_fields(self.__name__)
+        context = Transaction().context
+        active_ids = context.get('active_ids', [])
+        if len(active_ids) >= 2:
+            default['use_tmpl_fields'] = True
+        else:
+            default['use_tmpl_fields'] = False
         return default
 
     def transition_send(self):
