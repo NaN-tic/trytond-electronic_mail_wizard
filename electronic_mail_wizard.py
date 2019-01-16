@@ -11,6 +11,8 @@ from trytond.pyson import Eval
 from trytond.tools import grouped_slice
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
     'GenerateTemplateEmail']
@@ -73,14 +75,6 @@ class GenerateTemplateEmail(Wizard):
             ])
     send = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(GenerateTemplateEmail, cls).__setup__()
-        cls._error_messages.update({
-                'template_deleted': (
-                    'This template has been deactivated or deleted.'),
-                })
-
     def default_start(self, fields):
         default = self.render_fields(self.__name__)
         context = Transaction().context
@@ -108,8 +102,10 @@ class GenerateTemplateEmail(Wizard):
         active_ids = context.get('active_ids')
         action_id = context.get('action_id', None)
         wizard = Wizard(action_id)
-        template = (wizard.template[0] if wizard.template
-            else self.raise_user_error('template_deleted'))
+        template = wizard.template[0] if wizard.template else None
+        if not template:
+            raise UserError(gettext(
+                'electronic_mail_wizard.template_deleted'))
         total = len(active_ids)
 
         record = pool.get(template.model.model)(active_ids[0])
