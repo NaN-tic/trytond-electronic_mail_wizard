@@ -2,10 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:electronic_mail_wizard.templateemail:"
-msgid "This template has been deactivated or deleted."
-msgstr "Aquesta plantilla s'ha desactivat o eliminat."
-
 msgctxt "field:electronic.mail.template,create_action:"
 msgid "Create Action"
 msgstr "Crea acció"
@@ -105,6 +101,10 @@ msgstr "Resultat plantilla de correu"
 msgctxt "model:electronic.mail.wizard.templateemail.start,name:"
 msgid "Template Email Start"
 msgstr "Inici plantilla de correu"
+
+msgctxt "model:ir.message,text:template_deleted"
+msgid "This template has been deactivated or deleted."
+msgstr "Aquesta plantilla s’ha desactivat o esborrat."
 
 msgctxt "view:electronic.mail.wizard.templateemail.start:"
 msgid "Send Email"
