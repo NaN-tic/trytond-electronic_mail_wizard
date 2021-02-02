@@ -1,9 +1,6 @@
 # This file is part electronic_mail_wizard module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import logging
-import threading
-
 from trytond.config import config
 from trytond.model import ModelView, fields
 from trytond.pool import Pool
@@ -153,12 +150,14 @@ class GenerateTemplateEmail(Wizard):
 
     def render_and_send(self):
         pool = Pool()
+        Configuration = pool.get('electronic.mail.configuration')
         Template = pool.get('electronic.mail.template')
+        ElectronicEmail = pool.get('electronic.mail')
 
+        config = Configuration(1)
         template = self.start.template
         records = Transaction().context.get('active_ids')
         for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
-            threads = []
             for active_id in sub_records:
                 record = pool.get(template.model.model)(active_id)
                 # load data in language when send a record
@@ -175,6 +174,7 @@ class GenerateTemplateEmail(Wizard):
                     'bcc': self.start.bcc,
                     'message_id': self.start.message_id,
                     'in_reply_to': self.start.in_reply_to,
+                    'template': template.id,
                     }
                 if self.start.use_tmpl_fields:
                     tmpl_fields = ('subject', 'plain', 'html')
@@ -187,31 +187,11 @@ class GenerateTemplateEmail(Wizard):
                         'html': self.start.html,
                         })
 
-                db_name = Transaction().database.name
-                thread1 = threading.Thread(target=self.render_and_send_thread,
-                    args=(db_name, Transaction().user, template.id, active_id,
-                        values, Transaction().context.copy(),))
-                threads.append(thread1)
-                thread1.start()
-            for thread in threads:
-                thread.join()
+                mail_message = Template.render(template, record, values)
+                electronic_mail = ElectronicEmail.create_from_mail(mail_message,
+                    template.mailbox.id, record)
 
-    def render_and_send_thread(self, db_name, user_id, template_id, active_id,
-            values, context=None):
-        with Transaction().start(db_name, user_id, context=context):
-            pool = Pool()
-            Email = pool.get('electronic.mail')
-            Template = pool.get('electronic.mail.template')
-
-            template = Template(template_id)
-            record = pool.get(template.model.model)(active_id)
-
-            mail_message = Template.render(template, record, values)
-
-            electronic_mail = Email.create_from_mail(mail_message,
-                template.mailbox.id)
-            Template.send_mail(electronic_mail, template)
-            logging.getLogger('Mail').info('Send template email: %s - %s',
-                template.name, active_id)
-
-            Template.add_event(template, record, electronic_mail, mail_message)
+                with Transaction().set_context(
+                        queue_name='electronic_mail',
+                        queue_scheduled_at=config.send_email_after):
+                    ElectronicEmail.__queue__.send_mail([electronic_mail])
