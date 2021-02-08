@@ -10,10 +10,6 @@ msgctxt "field:electronic.mail.template,wizard:"
 msgid "Wizard"
 msgstr "Assistent"
 
-msgctxt "field:electronic.mail.wizard.templateemail.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
 msgid "Name"
 msgstr "Nom"
@@ -33,10 +29,6 @@ msgstr "De"
 msgctxt "field:electronic.mail.wizard.templateemail.start,html:"
 msgid "HTML Text Body"
 msgstr "Cos en HTML"
-
-msgctxt "field:electronic.mail.wizard.templateemail.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,in_reply_to:"
 msgid "In Repply To"
@@ -64,7 +56,7 @@ msgstr "Plantilla"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,to:"
 msgid "To"
-msgstr "A"
+msgstr "Per a"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,total:"
 msgid "Total"
