@@ -73,9 +73,12 @@ class GenerateTemplateEmail(Wizard):
     send = StateTransition()
 
     def default_start(self, fields):
-        default = self.render_fields(self.__name__)
         context = Transaction().context
         active_ids = context.get('active_ids', [])
+        if not active_ids:
+            return {}
+
+        default = self.render_fields(self.__name__)
         if len(active_ids) >= 2:
             default['use_tmpl_fields'] = True
         else:
@@ -83,6 +86,11 @@ class GenerateTemplateEmail(Wizard):
         return default
 
     def transition_send(self):
+        context = Transaction().context
+        active_ids = context.get('active_ids', [])
+        if not active_ids:
+            return 'end'
+
         self.render_and_send()
         return 'end'
 
