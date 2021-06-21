@@ -190,6 +190,8 @@ class GenerateTemplateEmail(Wizard):
                 mail_message = Template.render(template, record, values)
                 electronic_mail = ElectronicEmail.create_from_mail(mail_message,
                     template.mailbox.id, record)
+                if not electronic_mail:
+                    continue
 
                 with Transaction().set_context(
                         queue_name='electronic_mail',
