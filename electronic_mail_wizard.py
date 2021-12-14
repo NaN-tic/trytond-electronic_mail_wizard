@@ -164,6 +164,9 @@ class GenerateTemplateEmail(Wizard):
 
         config = Configuration(1)
         template = self.start.template
+        if not template:
+            raise UserError(gettext(
+                'electronic_mail_wizard.template_deleted'))
         records = Transaction().context.get('active_ids')
         for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
             for active_id in sub_records:
