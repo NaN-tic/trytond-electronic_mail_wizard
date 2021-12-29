@@ -203,6 +203,8 @@ class GenerateTemplateEmail(Wizard):
                     template.mailbox.id, record)
                 if not electronic_mail:
                     continue
+                electronic_mail.template = template
+                electronic_mail.save()
 
                 with Transaction().set_context(
                         queue_name='electronic_mail',
