@@ -58,10 +58,7 @@ class TemplateEmailStart(ModelView):
     message_id = fields.Char('Message-ID')
     in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
-    attachments = fields.One2Many('ir.attachment', None, "Attachments",
-        states={
-            'invisible': Eval('use_tmpl_fields', False),
-        }, depends=['use_tmpl_fields'])
+    attachments = fields.One2Many('ir.attachment', None, "Attachments")
     attachment_size = fields.Integer("Attachment size", readonly=True)
     attachment_files = fields.One2Many('electronic.mail.wizard.templateemail.attach',
         None, "Attachment Files")
@@ -180,12 +177,12 @@ class GenerateTemplateEmail(Wizard):
             default['plain'] = template.eval(template.plain, record)
             default['html'] = template.eval(template.html, record)
 
-            record_attachs = Attachment.search([
-                ('resource', '=', str(record))
-                ])
-            default['attachments'] = ([a.id for a in template.attachments]
-                + [a.id for a in record_attachs])
-            default['attachment_size'] = len(default['attachments'])
+        record_attachs = Attachment.search([
+            ('resource', '=', str(record))
+            ]) if total == 1 else []
+        default['attachments'] = ([a.id for a in template.attachments]
+            + [a.id for a in record_attachs])
+        default['attachment_size'] = len(default['attachments'])
 
         if len(active_ids) >= 2:
             default['use_tmpl_fields'] = True
