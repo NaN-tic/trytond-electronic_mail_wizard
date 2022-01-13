@@ -4,18 +4,25 @@
 from trytond.config import config
 from trytond.model import ModelView, fields
 from trytond.pool import Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, If
 from trytond.tools import grouped_slice
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 
-__all__ = ['TemplateEmailStart', 'TemplateEmailResult',
+__all__ = ['TemplateEmailAttach', 'TemplateEmailStart', 'TemplateEmailResult',
     'GenerateTemplateEmail']
 
 # Determines max connections to database used for the mail send thread
 MAX_DB_CONNECTION = config.getint('database', 'max_connections', default=50)
+
+
+class TemplateEmailAttach(ModelView):
+    'Template Email Attach'
+    __name__ = 'electronic.mail.wizard.templateemail.attach'
+    name = fields.Char("Name", required=True)
+    data = fields.Binary('Data', required=True, filename='name')
 
 
 class TemplateEmailStart(ModelView):
@@ -27,7 +34,10 @@ class TemplateEmailStart(ModelView):
     to = fields.Char('To', required=True)
     cc = fields.Char('CC')
     bcc = fields.Char('BCC')
-    use_tmpl_fields = fields.Boolean('Use template fields')
+    use_tmpl_fields = fields.Boolean("Use template fields",
+        states={
+            'readonly': Eval('use_tmpl_fields', False),
+        }, depends=['use_tmpl_fields'])
     subject = fields.Char('Subject', required=True,
         states={
             'readonly': Eval('use_tmpl_fields', False),
@@ -48,6 +58,19 @@ class TemplateEmailStart(ModelView):
     message_id = fields.Char('Message-ID')
     in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
+    attachments = fields.One2Many('ir.attachment', None, "Attachments",
+        states={
+            'invisible': Eval('use_tmpl_fields', False),
+        }, depends=['use_tmpl_fields'])
+    attachment_size = fields.Integer("Attachment size", readonly=True)
+    attachment_files = fields.One2Many('electronic.mail.wizard.templateemail.attach',
+        None, "Attachment Files")
+
+    @classmethod
+    def __setup__(cls):
+        super(TemplateEmailStart, cls).__setup__()
+        cls.attachments.size = If(Eval('attachment_size', False), 1, 0)
+        cls.attachments.depends += ['attachment_size']
 
     @staticmethod
     def default_use_tmpl_fields():
@@ -83,6 +106,7 @@ class GenerateTemplateEmail(Wizard):
             default['use_tmpl_fields'] = True
         else:
             default['use_tmpl_fields'] = False
+
         return default
 
     def transition_send(self):
@@ -102,6 +126,7 @@ class GenerateTemplateEmail(Wizard):
         pool = Pool()
         Wizard = pool.get('ir.action.wizard')
         Template = pool.get('electronic.mail.template')
+        Attachment = pool.get('ir.attachment')
 
         context = Transaction().context
         active_ids = context.get('active_ids')
@@ -154,6 +179,19 @@ class GenerateTemplateEmail(Wizard):
             default['subject'] = template.eval(template.subject, record)
             default['plain'] = template.eval(template.plain, record)
             default['html'] = template.eval(template.html, record)
+
+            record_attachs = Attachment.search([
+                ('resource', '=', str(record))
+                ])
+            default['attachments'] = ([a.id for a in template.attachments]
+                + [a.id for a in record_attachs])
+            default['attachment_size'] = len(default['attachments'])
+
+        if len(active_ids) >= 2:
+            default['use_tmpl_fields'] = True
+        else:
+            default['use_tmpl_fields'] = False
+
         return default
 
     def render_and_send(self):
@@ -197,6 +235,12 @@ class GenerateTemplateEmail(Wizard):
                         'plain': self.start.plain,
                         'html': self.start.html,
                         })
+
+                # attachments from wizard
+                if len(records) == 1:
+                    values['attachments'] = self.start.attachments
+                if self.start.attachment_files:
+                    values['attachment_files'] = self.start.attachment_files
 
                 mail_message = Template.render(template, record, values)
                 electronic_mail = ElectronicEmail.create_from_mail(mail_message,

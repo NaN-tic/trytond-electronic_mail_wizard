@@ -9,6 +9,7 @@ from . import action
 
 def register():
     Pool.register(
+        electronic_mail_wizard.TemplateEmailAttach,
         electronic_mail_wizard.TemplateEmailStart,
         electronic_mail_wizard.TemplateEmailResult,
         action.ActionWizard,
