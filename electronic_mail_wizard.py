@@ -1,6 +1,7 @@
 # This file is part electronic_mail_wizard module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from bs4 import BeautifulSoup
 from trytond.config import config
 from trytond.model import ModelView, fields
 from trytond.pool import Pool
@@ -136,7 +137,7 @@ class GenerateTemplateEmail(Wizard):
             if template.bcc:
                 default['bcc'] = template.bcc
             default['subject'] = template.subject
-            default['plain'] = template.plain
+            default['plain'] = BeautifulSoup(template.plain).get_text()
             default['html'] = template.html
         else:  # show fields with rendered tags
             record = pool.get(template.model.model)(active_ids[0])
@@ -152,7 +153,8 @@ class GenerateTemplateEmail(Wizard):
             if template.bcc:
                 default['bcc'] = template.eval(template.bcc, record)
             default['subject'] = template.eval(template.subject, record)
-            default['plain'] = template.eval(template.plain, record)
+            default['plain'] = BeautifulSoup(
+                template.eval(template.plain, record)).get_text()
             default['html'] = template.eval(template.html, record)
         return default
 
