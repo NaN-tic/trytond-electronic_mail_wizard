@@ -62,9 +62,10 @@ class Template(metaclass=PoolMeta):
             if values.get('name'):
                 wizards = [t.wizard for t in templates if t.wizard]
                 if wizards:
-                    Wizard.write(wizards, {
-                            'name': values.get('name'),
-                            })
+                    with Transaction().set_context(_check_access=False):
+                        Wizard.write(wizards, {
+                                'name': values.get('name'),
+                                })
 
     @classmethod
     def delete(cls, templates):
@@ -80,28 +81,29 @@ class Template(metaclass=PoolMeta):
         langs = Lang.search([
             ('translatable', '=', True),
             ])
-        for template in templates:
-            if not template.create_action:
-                continue
-            wizard = Wizard()
-            wizard.name = template.name
-            wizard.wiz_name = 'electronic_mail_wizard.templateemail'
-            wizard.save()
-            template.wizard = wizard
-            template.save()
+        with Transaction().set_context(_check_access=False):
+            for template in templates:
+                if not template.create_action:
+                    continue
+                wizard = Wizard()
+                wizard.name = template.name
+                wizard.wiz_name = 'electronic_mail_wizard.templateemail'
+                wizard.save()
+                template.wizard = wizard
+                template.save()
 
-            if langs:
-                for lang in langs:
-                    with Transaction().set_context(language=lang.code,
-                            fuzzy_translation=False):
-                        lang_name, = cls.read([template.id], ['name'])
-                        Wizard.write([wizard], lang_name)
+                if langs:
+                    for lang in langs:
+                        with Transaction().set_context(language=lang.code,
+                                fuzzy_translation=False):
+                            lang_name, = cls.read([template.id], ['name'])
+                            Wizard.write([wizard], lang_name)
 
-            keyword = Keyword()
-            keyword.keyword = 'form_action'
-            keyword.action = wizard.action
-            keyword.model = '%s,-1' % template.model.model
-            keyword.save()
+                keyword = Keyword()
+                keyword.keyword = 'form_action'
+                keyword.action = wizard.action
+                keyword.model = '%s,-1' % template.model.model
+                keyword.save()
 
     @classmethod
     def delete_wizards(cls, templates, ensure_create_action=True):
