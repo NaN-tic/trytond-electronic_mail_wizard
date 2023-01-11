@@ -3,6 +3,18 @@
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
 <tryton>
     <data>
+        <!-- electronic.mail.wizard.templateemail.attach -->
+        <record model="ir.ui.view" id="electronic_mail_wizard_attach_form_view">
+            <field name="model">electronic.mail.wizard.templateemail.attach</field>
+            <field name="type">form</field>
+            <field name="name">electronic_mail_wizard_attach_form</field>
+        </record>
+        <record model="ir.ui.view" id="electronic_mail_wizard_attach_tree_view">
+            <field name="model">electronic.mail.wizard.templateemail.attach</field>
+            <field name="type">tree</field>
+            <field name="name">electronic_mail_wizard_attach_tree</field>
+        </record>
+
         <record model="ir.ui.view" id="templateemail_start">
             <field name="model">electronic.mail.wizard.templateemail.start</field>
             <field name="type">form</field>
