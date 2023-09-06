@@ -117,43 +117,48 @@ class GenerateTemplateEmail(Wizard):
         # load data in language when send a record
         if template.language:
             language = template.eval(template.language, record)
-            with Transaction().set_context(language=language):
-                template = Template(template.id)
+        else:
+            language = Transaction().context.get('language')
 
-        default = {}
-        default['template'] = template.id
-        default['from_'] = template.eval(template.from_, record)
-        default['total'] = total
-        if total > 1:  # show fields with tags
-            default['message_id'] = template.message_id
-            if template.in_reply_to:
-                default['in_reply_to'] = template.in_reply_to
-            if template.sender:
-                default['sender'] = template.sender
-            default['to'] = template.to
-            if template.cc:
-                default['cc'] = template.cc
-            if template.bcc:
-                default['bcc'] = template.bcc
-            default['subject'] = template.subject
-            default['plain'] = template.plain
-            default['html'] = template.html
-        else:  # show fields with rendered tags
-            record = pool.get(template.model.model)(active_ids[0])
-            default['message_id'] = template.eval(template.message_id, record)
-            if template.in_reply_to:
-                default['in_reply_to'] = template.eval(template.in_reply_to,
-                    record)
-            if template.sender:
-                default['sender'] = template.eval(template.sender, record)
-            default['to'] = template.eval(template.to, record)
-            if template.cc:
-                default['cc'] = template.eval(template.cc, record)
-            if template.bcc:
-                default['bcc'] = template.eval(template.bcc, record)
-            default['subject'] = template.eval(template.subject, record)
-            default['plain'] = template.eval(template.plain, record)
-            default['html'] = template.eval(template.html, record)
+        with Transaction().set_context(language=language):
+            template = Template(template.id)
+
+            default = {}
+            default['template'] = template.id
+            default['total'] = total
+            if total > 1:  # show fields with tags
+                default['from_'] = template.from_
+                default['message_id'] = template.message_id
+                if template.in_reply_to:
+                    default['in_reply_to'] = template.in_reply_to
+                if template.sender:
+                    default['sender'] = template.sender
+                default['to'] = template.to
+                if template.cc:
+                    default['cc'] = template.cc
+                if template.bcc:
+                    default['bcc'] = template.bcc
+                default['subject'] = template.subject
+                default['plain'] = template.plain
+                default['html'] = template.html
+            else:
+                # Show fields with rendered tags and using template's language
+                record = pool.get(template.model.model)(active_ids[0])
+                default['from_'] = template.eval(template.from_, record)
+                default['message_id'] = template.eval(template.message_id, record)
+                if template.in_reply_to:
+                    default['in_reply_to'] = template.eval(template.in_reply_to,
+                        record)
+                if template.sender:
+                    default['sender'] = template.eval(template.sender, record)
+                default['to'] = template.eval(template.to, record)
+                if template.cc:
+                    default['cc'] = template.eval(template.cc, record)
+                if template.bcc:
+                    default['bcc'] = template.eval(template.bcc, record)
+                default['subject'] = template.eval(template.subject, record)
+                default['plain'] = template.eval(template.plain, record)
+                default['html'] = template.eval(template.html, record)
         return default
 
     def render_and_send(self):
@@ -174,9 +179,11 @@ class GenerateTemplateEmail(Wizard):
                 # load data in language when send a record
                 if template.language:
                     language = template.eval(template.language, record)
-                    with Transaction().set_context(language=language):
-                        template = Template(template.id)
+                else:
+                    language = Transaction().context.get('language')
 
+                with Transaction().set_context(language=language):
+                    template = Template(template.id)
                 values = {
                     'from_': self.start.from_,
                     'sender': self.start.sender,
@@ -198,7 +205,9 @@ class GenerateTemplateEmail(Wizard):
                         'html': self.start.html,
                         })
 
-                mail_message = Template.render(template, record, values)
+                with Transaction().set_context(language=language):
+                    mail_message = Template.render(template, record, values)
+
                 electronic_mail = ElectronicEmail.create_from_mail(mail_message,
                     template.mailbox.id, record)
                 if not electronic_mail:
