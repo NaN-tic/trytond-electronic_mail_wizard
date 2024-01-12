@@ -17,8 +17,7 @@ class Template(metaclass=PoolMeta):
     wizard = fields.Many2One("ir.action.wizard", 'Wizard',
         states={
             'readonly': Eval('create_action', False),
-            },
-        depends=['create_action'])
+            })
 
     @classmethod
     def __register__(cls, module_name):
