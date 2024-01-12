@@ -32,18 +32,15 @@ class TemplateEmailStart(ModelView):
     subject = fields.Char('Subject', required=True,
         states={
             'readonly': Eval('use_tmpl_fields', False),
-            },
-        depends=['use_tmpl_fields'])
+            })
     plain = fields.Text('Plain Text Body',
         states={
             'readonly': Eval('use_tmpl_fields', False),
-            },
-        depends=['use_tmpl_fields'])
+            })
     html = fields.Text('HTML Text Body',
         states={
             'readonly': Eval('use_tmpl_fields', False),
-            },
-        depends=['use_tmpl_fields'])
+            })
     total = fields.Integer('Total', readonly=True,
         help='Total emails to send')
     message_id = fields.Char('Message-ID')
