@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- This file is part electronic_mail_template module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
-<form col="2">
+<form col="4">
     <label name="from_"/>
     <field name="from_"/>
     <label name="sender"/>
@@ -18,14 +18,14 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <field name="subject"/>
     <notebook>
         <page name="plain">
-            <field name="plain"/>
+            <field name="plain" colspan="4"/>
         </page>
         <page name="html">
-            <field name="html"/>
+            <field name="html" colspan="4"/>
         </page>
     </notebook>
-    <separator name="total" colspan="2"/>
-    <field name="total" colspan="2"/>
+    <separator name="total" colspan="4"/>
+    <field name="total" colspan="4"/>
     <newline/>
     <field name="template" invisible="1"/>
     <field name="message_id" invisible="1"/>
