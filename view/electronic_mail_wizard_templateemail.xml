@@ -18,10 +18,10 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <field name="subject"/>
     <notebook>
         <page name="plain">
-            <field name="plain"/>
+            <field name="plain" height="300"/>
         </page>
         <page name="html">
-            <field name="html"/>
+            <field name="html" height="300"/>
         </page>
     </notebook>
     <separator name="total" colspan="2"/>
