@@ -16,7 +16,6 @@ __all__ = ['TemplateEmailStart', 'TemplateEmailResult',
 
 # Determines max connections to database used for the mail send thread
 MAX_DB_CONNECTION = config.getint('database', 'max_connections', default=50)
-QUEUE_NAME = config.get('electronic_mail', 'queue_name', default='default')
 
 
 class TemplateEmailStart(ModelView):
@@ -164,15 +163,14 @@ class GenerateTemplateEmail(Wizard):
 
     def render_and_send(self):
         pool = Pool()
-        Configuration = pool.get('electronic.mail.configuration')
         Template = pool.get('electronic.mail.template')
         ElectronicEmail = pool.get('electronic.mail')
 
-        config = Configuration(1)
         template = self.start.template
         if not template:
             raise UserError(gettext(
                 'electronic_mail_wizard.template_deleted'))
+
         records = Transaction().context.get('active_ids')
         for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
             for active_id in sub_records:
@@ -216,7 +214,5 @@ class GenerateTemplateEmail(Wizard):
                 electronic_mail.template = template
                 electronic_mail.save()
 
-                with Transaction().set_context(
-                        queue_name=QUEUE_NAME,
-                        queue_scheduled_at=config.send_email_after):
-                    ElectronicEmail.__queue__.send_mail([electronic_mail])
+                # call send_mail button. _send_mail is the queue
+                ElectronicEmail.send_mail([electronic_mail])
