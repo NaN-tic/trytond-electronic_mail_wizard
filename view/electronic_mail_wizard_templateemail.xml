@@ -23,6 +23,11 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <page name="html">
             <field name="html" colspan="4" height="300"/>
         </page>
+        <page name="attachments">
+            <label string="If the file is bigger than 25MB will not be attached."
+                id="reset" yalign="0.0" xalign="0.0" xexpand="1"/>
+            <field name="attachments" colspan="4"/>
+        </page>
     </notebook>
     <separator name="total" colspan="4"/>
     <field name="total" colspan="4"/>

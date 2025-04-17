@@ -11,6 +11,7 @@ def register():
     Pool.register(
         electronic_mail_wizard.TemplateEmailStart,
         electronic_mail_wizard.TemplateEmailResult,
+        electronic_mail_wizard.TemplateEmailAttachment,
         action.ActionWizard,
         template.Template,
         module='electronic_mail_wizard', type_='model')
