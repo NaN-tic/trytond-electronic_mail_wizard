@@ -11,11 +11,26 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 
-__all__ = ['TemplateEmailStart', 'TemplateEmailResult',
-    'GenerateTemplateEmail']
 
 # Determines max connections to database used for the mail send thread
 MAX_DB_CONNECTION = config.getint('database', 'max_connections', default=50)
+
+
+class TemplateEmailAttachment(ModelView):
+    'Template Email Attachment'
+    __name__ = 'electronic.mail.wizard.templateemail.attachment'
+
+    wizard = fields.Many2One('electronic.mail.wizard.templateemail.start',
+        'Wizard')
+    name = fields.Char('Name')
+    data = fields.Binary('Data', filename='name')
+
+    @fields.depends('data')
+    def on_change_data(self):
+        size = len(self.data or '')
+        if size and size >= 26214400:
+            self.data = None
+            self.name = None
 
 
 class TemplateEmailStart(ModelView):
@@ -45,6 +60,9 @@ class TemplateEmailStart(ModelView):
     message_id = fields.Char('Message-ID')
     in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
+    attachments = fields.One2Many(
+        'electronic.mail.wizard.templateemail.attachment', 'wizard',
+        'Attachments', help="Attchments from user computer.")
 
     @staticmethod
     def default_use_tmpl_fields():
@@ -201,8 +219,17 @@ class GenerateTemplateEmail(Wizard):
                         'html': self.start.html,
                         })
 
+                attachments = []
+                for attachment in self.start.attachments:
+                    if attachment.data:
+                        attachments.append({
+                            'name': attachment.name,
+                            'data': attachment.data,
+                            })
+
                 with Transaction().set_context(language=language):
-                    mail_message = Template.render(template, record, values)
+                    mail_message = Template.render(template, record, values,
+                        extra_attachments=attachments)
 
                 electronic_mail = ElectronicEmail.create_from_mail(mail_message,
                     template.mailbox.id, record)

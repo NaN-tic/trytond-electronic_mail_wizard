@@ -8,5 +8,16 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <field name="type">form</field>
             <field name="name">electronic_mail_wizard_templateemail</field>
         </record>
+
+        <record model="ir.ui.view" id="templateemail_attachment_view_form">
+            <field name="model">electronic.mail.wizard.templateemail.attachment</field>
+            <field name="type">form</field>
+            <field name="name">electronic_mail_wizard_templateemail_attachment_form</field>
+        </record>
+        <record model="ir.ui.view" id="templateemail_attachment_view_tree">
+            <field name="model">electronic.mail.wizard.templateemail.attachment</field>
+            <field name="type">tree</field>
+            <field name="name">electronic_mail_wizard_templateemail_attachment_list</field>
+        </record>
     </data>
 </tryton>
