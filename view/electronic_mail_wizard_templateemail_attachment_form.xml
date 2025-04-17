@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<form>
+    <label name="name"/>
+    <field name="name" colspan="2"/>
+    <newline/>
+    <field name="data" filename_visible="1"/>
+    <newline/>
+    <field name="data" widget="document" colspan="4"/>
+    <newline/>
+</form>
