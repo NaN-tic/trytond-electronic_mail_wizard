@@ -14,21 +14,21 @@ from trytond.exceptions import UserError
 
 # Determines max connections to database used for the mail send thread
 MAX_DB_CONNECTION = config.getint('database', 'max_connections', default=50)
+MAX_ATTACHMENT_SIZE = config.getint('email', 'max_attachment_size',
+    default=26214400)
 
 
 class TemplateEmailAttachment(ModelView):
     'Template Email Attachment'
     __name__ = 'electronic.mail.wizard.templateemail.attachment'
 
-    wizard = fields.Many2One('electronic.mail.wizard.templateemail.start',
-        'Wizard')
     name = fields.Char('Name')
     data = fields.Binary('Data', filename='name')
 
     @fields.depends('data')
     def on_change_data(self):
         size = len(self.data or '')
-        if size and size >= 26214400:
+        if size and size >= MAX_ATTACHMENT_SIZE:
             self.data = None
             self.name = None
 
@@ -61,7 +61,7 @@ class TemplateEmailStart(ModelView):
     in_reply_to = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
     attachments = fields.One2Many(
-        'electronic.mail.wizard.templateemail.attachment', 'wizard',
+        'electronic.mail.wizard.templateemail.attachment', None,
         'Attachments', help="Attchments from user computer.")
 
     @staticmethod
