@@ -4,15 +4,31 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "field:electronic.mail.template,create_action:"
 msgid "Create Action"
-msgstr "Crea acció"
+msgstr "Crear acció"
 
 msgctxt "field:electronic.mail.template,wizard:"
+msgid "Wizard"
+msgstr "Assistent"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,data:"
+msgid "Data"
+msgstr "Dades"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,wizard:"
 msgid "Wizard"
 msgstr "Assistent"
 
 msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
 msgid "Name"
 msgstr "Nom"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attachments"
+msgstr "Adjunts"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,bcc:"
 msgid "BCC"
@@ -72,8 +88,8 @@ msgstr "Plantilla"
 
 msgctxt "help:electronic.mail.template,create_action:"
 msgid ""
-"If set a wizard action will be created in the related model in order to send"
-" the template."
+"If set a wizard action will be created in the related model in order to "
+"send the template."
 msgstr ""
 "Si es marca es crearà una acció al model relacionat per tal d'enviar la "
 "plantilla."
@@ -82,9 +98,17 @@ msgctxt "help:electronic.mail.wizard.templateemail.result,name:"
 msgid "Name of Header Field"
 msgstr "Nom camp capçalera"
 
+msgctxt "help:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attchments from user computer."
+msgstr "Anexos de l'ordinador de l'usuari."
+
 msgctxt "help:electronic.mail.wizard.templateemail.start,total:"
 msgid "Total emails to send"
 msgstr "Total correus a enviar"
+
+msgctxt "model:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Template Email Attachment"
+msgstr "Plantilla adjunta de correu electrònic"
 
 msgctxt "model:electronic.mail.wizard.templateemail.result,name:"
 msgid "Template Email Result"
@@ -99,8 +123,8 @@ msgid "This template has been deactivated or deleted."
 msgstr "Aquesta plantilla s’ha desactivat o esborrat."
 
 msgctxt "view:electronic.mail.wizard.templateemail.start:"
-msgid "Send Email"
-msgstr "Envia correu"
+msgid "If the file is bigger than 25MB will not be attached."
+msgstr "Si el fitxer és superior a 25 MB, no s'adjuntarà."
 
 msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,end:"
 msgid "Cancel"
