@@ -10,9 +10,25 @@ msgctxt "field:electronic.mail.template,wizard:"
 msgid "Wizard"
 msgstr "Asistente"
 
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,data:"
+msgid "Data"
+msgstr "Datos"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,wizard:"
+msgid "Wizard"
+msgstr "Asistente"
+
 msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attachments"
+msgstr "Archivos adjuntos"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,bcc:"
 msgid "BCC"
@@ -72,8 +88,8 @@ msgstr "Plantilla"
 
 msgctxt "help:electronic.mail.template,create_action:"
 msgid ""
-"If set a wizard action will be created in the related model in order to send"
-" the template."
+"If set a wizard action will be created in the related model in order to "
+"send the template."
 msgstr ""
 "Si se marca se creará una acción en el modelo relacionado para enviar la "
 "plantilla. "
@@ -82,9 +98,17 @@ msgctxt "help:electronic.mail.wizard.templateemail.result,name:"
 msgid "Name of Header Field"
 msgstr "Nombre del campo de la cabezera"
 
+msgctxt "help:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attchments from user computer."
+msgstr "Archivos adjuntos desde la computadora del usuario."
+
 msgctxt "help:electronic.mail.wizard.templateemail.start,total:"
 msgid "Total emails to send"
 msgstr "Total correos a enviar"
+
+msgctxt "model:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Template Email Attachment"
+msgstr "Plantilla de archivo adjunto de correo electrónico"
 
 msgctxt "model:electronic.mail.wizard.templateemail.result,name:"
 msgid "Template Email Result"
@@ -103,8 +127,8 @@ msgid "VAT Information Exchange System Results"
 msgstr "Resultado del sistema de intercambio de información VAT"
 
 msgctxt "view:electronic.mail.wizard.templateemail.start:"
-msgid "Send Email"
-msgstr "Enviar correo"
+msgid "If the file is bigger than 25MB will not be attached."
+msgstr "Si el archivo es mayor a 25 MB no se adjuntará."
 
 msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,end:"
 msgid "Cancel"
