@@ -18,10 +18,6 @@ msgctxt "field:electronic.mail.wizard.templateemail.attachment,name:"
 msgid "Name"
 msgstr "Nom"
 
-msgctxt "field:electronic.mail.wizard.templateemail.attachment,wizard:"
-msgid "Wizard"
-msgstr "Assistent"
-
 msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
 msgid "Name"
 msgstr "Nom"
