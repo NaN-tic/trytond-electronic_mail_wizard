@@ -101,7 +101,7 @@ class Template(metaclass=PoolMeta):
                 keyword = Keyword()
                 keyword.keyword = 'form_action'
                 keyword.action = wizard.action
-                keyword.model = '%s,-1' % template.model.model
+                keyword.model = '%s,-1' % template.model.name
                 keyword.save()
 
     @classmethod

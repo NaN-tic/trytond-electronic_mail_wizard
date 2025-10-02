@@ -128,7 +128,7 @@ class GenerateTemplateEmail(Wizard):
                 'electronic_mail_wizard.template_deleted'))
         total = len(active_ids)
 
-        record = pool.get(template.model.model)(active_ids[0])
+        record = pool.get(template.model.name)(active_ids[0])
         # load data in language when send a record
         if template.language:
             language = template.eval(template.language, record)
@@ -158,7 +158,7 @@ class GenerateTemplateEmail(Wizard):
                 default['html'] = template.html
             else:
                 # Show fields with rendered tags and using template's language
-                record = pool.get(template.model.model)(active_ids[0])
+                record = pool.get(template.model.name)(active_ids[0])
                 default['from_'] = template.eval(template.from_, record)
                 default['message_id'] = template.eval(template.message_id, record)
                 if template.in_reply_to:
@@ -189,7 +189,7 @@ class GenerateTemplateEmail(Wizard):
         records = Transaction().context.get('active_ids')
         for sub_records in grouped_slice(records, MAX_DB_CONNECTION):
             for active_id in sub_records:
-                record = pool.get(template.model.model)(active_id)
+                record = pool.get(template.model.name)(active_id)
                 # load data in language when send a record
                 if template.language:
                     language = template.eval(template.language, record)
