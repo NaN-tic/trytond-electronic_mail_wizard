@@ -63,10 +63,30 @@ class TemplateEmailStart(ModelView):
     attachments = fields.One2Many(
         'electronic.mail.wizard.templateemail.attachment', None,
         'Attachments', help="Attchments from user computer.")
+    origin = fields.Reference('Origin', selection='get_origin')
+    origin_attachments = fields.Many2Many('ir.attachment', None, None,
+        'Origin Attachments', domain=[
+            ('resource', '=', Eval('origin', -1))
+                ])
 
     @staticmethod
     def default_use_tmpl_fields():
         return True
+
+    @classmethod
+    def _get_origin(cls):
+        pool = Pool()
+        Template = pool.get('electronic.mail.template')
+        templates = Template.search([])
+        return list(set([t.model.model for t in templates]))
+
+    @classmethod
+    def get_origin(cls):
+        pool = Pool()
+        Model = pool.get('ir.model')
+        get_name = Model.get_name
+        models = cls._get_origin()
+        return [(None, '')] + [(m, get_name(m)) for m in models]
 
 
 class TemplateEmailResult(ModelView):
@@ -88,6 +108,8 @@ class GenerateTemplateEmail(Wizard):
     send = StateTransition()
 
     def default_start(self, fields):
+        pool = Pool()
+        Wizard = pool.get('ir.action.wizard')
         context = Transaction().context
         active_ids = context.get('active_ids', [])
         if not active_ids:
@@ -97,7 +119,15 @@ class GenerateTemplateEmail(Wizard):
         if len(active_ids) >= 2:
             default['use_tmpl_fields'] = True
         else:
+            action_id = context.get('action_id', None)
+            wizard = Wizard(action_id)
+            template = wizard.template[0] if wizard.template else None
+            if not template:
+                raise UserError(gettext(
+                    'electronic_mail_wizard.template_deleted'))
+
             default['use_tmpl_fields'] = False
+            default['origin'] = "%s,%s" % (template.model.model, active_ids[0])
         return default
 
     def transition_send(self):
