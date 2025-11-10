@@ -250,7 +250,8 @@ class GenerateTemplateEmail(Wizard):
                         })
 
                 attachments = []
-                for attachment in self.start.attachments:
+                for attachment in (self.start.attachments
+                        + self.start.origin_attachments):
                     if attachment.data:
                         attachments.append({
                             'name': attachment.name,
