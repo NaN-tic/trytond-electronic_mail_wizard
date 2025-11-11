@@ -78,7 +78,7 @@ class TemplateEmailStart(ModelView):
         pool = Pool()
         Template = pool.get('electronic.mail.template')
         templates = Template.search([])
-        return list(set([t.model.model for t in templates]))
+        return list(set([t.model.name for t in templates]))
 
     @classmethod
     def get_origin(cls):
@@ -127,7 +127,7 @@ class GenerateTemplateEmail(Wizard):
                     'electronic_mail_wizard.template_deleted'))
 
             default['use_tmpl_fields'] = False
-            default['origin'] = "%s,%s" % (template.model.model, active_ids[0])
+            default['origin'] = "%s,%s" % (template.model.name, active_ids[0])
         return default
 
     def transition_send(self):
