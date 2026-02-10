@@ -17,11 +17,8 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <label name="subject"/>
     <field name="subject"/>
     <notebook>
-        <page name="plain">
-            <field name="plain" colspan="4" height="300"/>
-        </page>
-        <page name="html">
-            <field name="html" colspan="4" height="300"/>
+        <page name="markdown">
+            <field name="markdown" colspan="4" height="300"/>
         </page>
         <page name="attachments">
             <label string="If the file is bigger than 25MB will not be attached."
