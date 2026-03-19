@@ -47,11 +47,7 @@ class TemplateEmailStart(ModelView):
         states={
             'readonly': Eval('use_tmpl_fields', False),
             })
-    plain = fields.Text('Plain Text Body',
-        states={
-            'readonly': Eval('use_tmpl_fields', False),
-            })
-    html = fields.Text('HTML Text Body',
+    markdown = fields.Text('Markdown Body',
         states={
             'readonly': Eval('use_tmpl_fields', False),
             })
@@ -184,8 +180,7 @@ class GenerateTemplateEmail(Wizard):
                 if template.bcc:
                     default['bcc'] = template.bcc
                 default['subject'] = template.subject
-                default['plain'] = template.plain
-                default['html'] = template.html
+                default['markdown'] = template.markdown
             else:
                 # Show fields with rendered tags and using template's language
                 record = pool.get(template.model.name)(active_ids[0])
@@ -202,8 +197,7 @@ class GenerateTemplateEmail(Wizard):
                 if template.bcc:
                     default['bcc'] = template.eval(template.bcc, record)
                 default['subject'] = template.eval(template.subject, record)
-                default['plain'] = template.eval(template.plain, record)
-                default['html'] = template.eval(template.html, record)
+                default['markdown'] = template.eval(template.markdown, record)
         return default
 
     def render_and_send(self):
@@ -239,14 +233,13 @@ class GenerateTemplateEmail(Wizard):
                     'template': template.id,
                     }
                 if self.start.use_tmpl_fields:
-                    tmpl_fields = ('subject', 'plain', 'html')
+                    tmpl_fields = ('subject', 'markdown')
                     for field_name in tmpl_fields:
                         values[field_name] = getattr(template, field_name)
                 else:
                     values.update({
                         'subject': self.start.subject,
-                        'plain': self.start.plain,
-                        'html': self.start.html,
+                        'markdown': self.start.markdown,
                         })
 
                 attachments = []
