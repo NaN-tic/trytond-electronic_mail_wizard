@@ -38,9 +38,9 @@ msgctxt "field:electronic.mail.wizard.templateemail.start,from_:"
 msgid "From"
 msgstr "De"
 
-msgctxt "field:electronic.mail.wizard.templateemail.start,html:"
-msgid "HTML Text Body"
-msgstr "Cuerpo en HTML"
+msgctxt "field:electronic.mail.wizard.templateemail.start,markdown:"
+msgid "Markdown Body"
+msgstr "Cuerpo Markdown"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,in_reply_to:"
 msgid "In Repply To"
@@ -57,10 +57,6 @@ msgstr "Origen"
 msgctxt "field:electronic.mail.wizard.templateemail.start,origin_attachments:"
 msgid "Origin Attachments"
 msgstr "Adjuntos del origen"
-
-msgctxt "field:electronic.mail.wizard.templateemail.start,plain:"
-msgid "Plain Text Body"
-msgstr "Texto plano cuerpo"
 
 msgctxt "field:electronic.mail.wizard.templateemail.start,sender:"
 msgid "Sender"
