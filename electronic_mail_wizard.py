@@ -55,6 +55,7 @@ class TemplateEmailStart(ModelView):
         help='Total emails to send')
     message_id = fields.Char('Message-ID')
     in_reply_to = fields.Char('In Repply To')
+    references = fields.Char('In Repply To')
     template = fields.Many2One("electronic.mail.template", 'Template')
     attachments = fields.One2Many(
         'electronic.mail.wizard.templateemail.attachment', None,
@@ -172,6 +173,8 @@ class GenerateTemplateEmail(Wizard):
                 default['message_id'] = template.message_id
                 if template.in_reply_to:
                     default['in_reply_to'] = template.in_reply_to
+                if template.references:
+                    default['references'] = template.references
                 if template.sender:
                     default['sender'] = template.sender
                 default['to'] = template.to
@@ -188,6 +191,9 @@ class GenerateTemplateEmail(Wizard):
                 default['message_id'] = template.eval(template.message_id, record)
                 if template.in_reply_to:
                     default['in_reply_to'] = template.eval(template.in_reply_to,
+                        record)
+                if template.references:
+                    default['references'] = template.eval(template.references,
                         record)
                 if template.sender:
                     default['sender'] = template.eval(template.sender, record)
@@ -230,6 +236,7 @@ class GenerateTemplateEmail(Wizard):
                     'bcc': self.start.bcc,
                     'message_id': self.start.message_id,
                     'in_reply_to': self.start.in_reply_to,
+                    'references': self.start.references,
                     'template': template.id,
                     }
                 if self.start.use_tmpl_fields:
