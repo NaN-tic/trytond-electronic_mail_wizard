@@ -1,7 +1,7 @@
 # This file is part electronic_mail_wizard module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from trytond.config import config
+import trytond.config as config
 from trytond.model import ModelView, fields
 from trytond.pool import Pool
 from trytond.pyson import Eval
