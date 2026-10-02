@@ -203,7 +203,8 @@ class GenerateTemplateEmail(Wizard):
                 if template.bcc:
                     default['bcc'] = template.eval(template.bcc, record)
                 default['subject'] = template.eval(template.subject, record)
-                default['markdown'] = template.eval(template.markdown, record)
+                default['markdown'] = template.eval_markdown(
+                    template.markdown, record)
         return default
 
     def render_and_send(self):
