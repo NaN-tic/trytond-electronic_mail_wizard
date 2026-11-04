@@ -1,0 +1,146 @@
+#
+msgid ""
+msgstr ""
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "field:electronic.mail.template,create_action:"
+msgid "Create Action"
+msgstr "创建操作"
+
+msgctxt "field:electronic.mail.template,wizard:"
+msgid "Wizard"
+msgstr "向导"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,data:"
+msgid "Data"
+msgstr "数据"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Name"
+msgstr "名称"
+
+msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
+msgid "Name"
+msgstr "名称"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attachments"
+msgstr "附件"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,bcc:"
+msgid "BCC"
+msgstr "密送"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,cc:"
+msgid "CC"
+msgstr "抄送"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,from_:"
+msgid "From"
+msgstr "从"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,markdown:"
+msgid "Markdown Body"
+msgstr "Markdown 正文"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,in_reply_to:"
+msgid "In Repply To"
+msgstr "回复关联"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,message_id:"
+msgid "Message-ID"
+msgstr "邮件 ID"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,origin:"
+msgid "Origin"
+msgstr "依据"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,origin_attachments:"
+msgid "Origin Attachments"
+msgstr "来源附件"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,sender:"
+msgid "Sender"
+msgstr "发件人"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,subject:"
+msgid "Subject"
+msgstr "主题"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,template:"
+msgid "Template"
+msgstr "模板"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,to:"
+msgid "To"
+msgstr "到"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,total:"
+msgid "Total"
+msgstr "合计"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,use_tmpl_fields:"
+msgid "Use template fields"
+msgstr "使用模板字段"
+
+msgctxt "field:ir.action.wizard,template:"
+msgid "Template"
+msgstr "模板"
+
+msgctxt "help:electronic.mail.template,create_action:"
+msgid ""
+"If set a wizard action will be created in the related model in order to send"
+" the template."
+msgstr "设置后，将在关联模型中创建向导操作，用于发送该模板。"
+
+msgctxt "help:electronic.mail.wizard.templateemail.result,name:"
+msgid "Name of Header Field"
+msgstr "邮件头字段名称"
+
+msgctxt "help:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attchments from user computer."
+msgstr "来自用户计算机的附件。"
+
+msgctxt "help:electronic.mail.wizard.templateemail.start,total:"
+msgid "Total emails to send"
+msgstr "待发送邮件总数"
+
+msgctxt "model:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Template Email Attachment"
+msgstr "模板邮件附件"
+
+msgctxt "model:electronic.mail.wizard.templateemail.result,name:"
+msgid "Template Email Result"
+msgstr "模板邮件结果"
+
+msgctxt "model:electronic.mail.wizard.templateemail.start,name:"
+msgid "Template Email Start"
+msgstr "模板邮件：开始"
+
+msgctxt "model:ir.message,text:template_deleted"
+msgid "This template has been deactivated or deleted."
+msgstr "此模板已停用或删除。"
+
+msgctxt "view:electronic.mail.wizard.templateemail.start:"
+msgid "If the file is bigger than 25MB will not be attached."
+msgstr "文件大于 25MB 时不会作为附件添加。"
+
+msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,end:"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,send:"
+msgid "Send"
+msgstr "发送"
+
+msgctxt "view:electronic.mail.wizard.templateemail.result:"
+msgid "VAT Information Exchange System Results"
+msgstr "增值税信息交换系统结果"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,references:"
+msgid "In Repply To"
+msgstr "回复关联"
