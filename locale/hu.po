@@ -1,0 +1,148 @@
+#
+msgid ""
+msgstr ""
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "field:electronic.mail.template,create_action:"
+msgid "Create Action"
+msgstr "Művelet létrehozása"
+
+msgctxt "field:electronic.mail.template,wizard:"
+msgid "Wizard"
+msgstr "Varázsló"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,data:"
+msgid "Data"
+msgstr "Adat"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Name"
+msgstr "Név"
+
+msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
+msgid "Name"
+msgstr "Név"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attachments"
+msgstr "Mellékletek"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,bcc:"
+msgid "BCC"
+msgstr "Titkos másolat"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,cc:"
+msgid "CC"
+msgstr "Másolat"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,from_:"
+msgid "From"
+msgstr "-tól; -től"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,markdown:"
+msgid "Markdown Body"
+msgstr "Markdown-törzs"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,in_reply_to:"
+msgid "In Repply To"
+msgstr "Válasz erre"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,message_id:"
+msgid "Message-ID"
+msgstr "Üzenetazonosító"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,origin:"
+msgid "Origin"
+msgstr "Eredet"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,origin_attachments:"
+msgid "Origin Attachments"
+msgstr "Forrás mellékletei"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,sender:"
+msgid "Sender"
+msgstr "Feladó"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,subject:"
+msgid "Subject"
+msgstr "Tárgy"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,template:"
+msgid "Template"
+msgstr "Sablon"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,to:"
+msgid "To"
+msgstr "Címzett"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,total:"
+msgid "Total"
+msgstr "Összesen"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,use_tmpl_fields:"
+msgid "Use template fields"
+msgstr "Sablonmezők használata"
+
+msgctxt "field:ir.action.wizard,template:"
+msgid "Template"
+msgstr "Sablon"
+
+msgctxt "help:electronic.mail.template,create_action:"
+msgid ""
+"If set a wizard action will be created in the related model in order to send"
+" the template."
+msgstr ""
+"Ha be van állítva, a kapcsolódó modellen létrejön egy varázslóművelet a "
+"sablon elküldéséhez."
+
+msgctxt "help:electronic.mail.wizard.templateemail.result,name:"
+msgid "Name of Header Field"
+msgstr "Fejlécmező neve"
+
+msgctxt "help:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attchments from user computer."
+msgstr "Mellékletek a felhasználó számítógépéről."
+
+msgctxt "help:electronic.mail.wizard.templateemail.start,total:"
+msgid "Total emails to send"
+msgstr "Elküldendő e-mailek száma"
+
+msgctxt "model:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Template Email Attachment"
+msgstr "Sablonlevél melléklete"
+
+msgctxt "model:electronic.mail.wizard.templateemail.result,name:"
+msgid "Template Email Result"
+msgstr "Sablonlevél eredménye"
+
+msgctxt "model:electronic.mail.wizard.templateemail.start,name:"
+msgid "Template Email Start"
+msgstr "Sablonlevél indítása"
+
+msgctxt "model:ir.message,text:template_deleted"
+msgid "This template has been deactivated or deleted."
+msgstr "Ez a sablon inaktiválva vagy törölve lett."
+
+msgctxt "view:electronic.mail.wizard.templateemail.start:"
+msgid "If the file is bigger than 25MB will not be attached."
+msgstr "A 25 MB-nál nagyobb fájl nem lesz csatolva."
+
+msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,end:"
+msgid "Cancel"
+msgstr "Mégse"
+
+msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,send:"
+msgid "Send"
+msgstr "Küldés"
+
+msgctxt "view:electronic.mail.wizard.templateemail.result:"
+msgid "VAT Information Exchange System Results"
+msgstr "Áfainformációcsere-rendszer eredményei"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,references:"
+msgid "In Repply To"
+msgstr "Válasz erre"
