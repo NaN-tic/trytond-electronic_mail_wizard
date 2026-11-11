@@ -21,8 +21,12 @@ class Template(metaclass=PoolMeta):
 
     @classmethod
     def __register__(cls, module_name):
-        Wizard = Pool().get('ir.action.wizard')
+        pool = Pool()
+        Wizard = pool.get('ir.action.wizard')
+        Model = pool.get('ir.model')
         wizard = Wizard.__table__()
+        model = Model.__table__()
+        template = cls.__table__()
 
         super(Template, cls).__register__(module_name)
 
@@ -35,6 +39,16 @@ class Template(metaclass=PoolMeta):
                     ['electronic_mail_wizard.templateemail'],
                     where=wizard.wiz_name.like(
                         'electronic_mail_wizard.templateemail_%')))
+
+        # Set the model on existing template wizards for access checks.
+        cursor.execute(*template.join(
+                model, condition=template.model == model.id
+                ).join(wizard, condition=template.wizard == wizard.id
+                ).select(wizard.id, model.name,
+                    where=wizard.model == None))
+        for wizard_id, model_name in cursor.fetchall():
+            cursor.execute(*wizard.update([wizard.model], [model_name],
+                    where=wizard.id == wizard_id))
 
     @staticmethod
     def default_create_action():
@@ -87,6 +101,7 @@ class Template(metaclass=PoolMeta):
                 wizard = Wizard()
                 wizard.name = template.name
                 wizard.wiz_name = 'electronic_mail_wizard.templateemail'
+                wizard.model = template.model.name
                 wizard.save()
                 template.wizard = wizard
                 template.save()
