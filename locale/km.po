@@ -1,0 +1,148 @@
+#
+msgid ""
+msgstr ""
+"Language: km\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "field:electronic.mail.template,create_action:"
+msgid "Create Action"
+msgstr "បង្កើតសកម្មភាព"
+
+msgctxt "field:electronic.mail.template,wizard:"
+msgid "Wizard"
+msgstr "ជំនួយការណែនាំ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,data:"
+msgid "Data"
+msgstr "ទិន្នន័យ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Name"
+msgstr "ឈ្មោះ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.result,name:"
+msgid "Name"
+msgstr "ឈ្មោះ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attachments"
+msgstr "ឯកសារភ្ជាប់"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,bcc:"
+msgid "BCC"
+msgstr "BCC"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,cc:"
+msgid "CC"
+msgstr "CC"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,from_:"
+msgid "From"
+msgstr "ពី"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,markdown:"
+msgid "Markdown Body"
+msgstr "ខ្លឹមសារ Markdown"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,in_reply_to:"
+msgid "In Repply To"
+msgstr "ឆ្លើយតបនឹង"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,message_id:"
+msgid "Message-ID"
+msgstr "ID សារ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,origin:"
+msgid "Origin"
+msgstr "ប្រភពដើម"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,origin_attachments:"
+msgid "Origin Attachments"
+msgstr "ឯកសារភ្ជាប់ពីប្រភព"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,sender:"
+msgid "Sender"
+msgstr "អ្នកផ្ញើ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,subject:"
+msgid "Subject"
+msgstr "ប្រធានបទ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,template:"
+msgid "Template"
+msgstr "គំរូ"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,to:"
+msgid "To"
+msgstr "ដល់"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,total:"
+msgid "Total"
+msgstr "សរុប"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,use_tmpl_fields:"
+msgid "Use template fields"
+msgstr "ប្រើវាលពីគំរូ"
+
+msgctxt "field:ir.action.wizard,template:"
+msgid "Template"
+msgstr "គំរូ"
+
+msgctxt "help:electronic.mail.template,create_action:"
+msgid ""
+"If set a wizard action will be created in the related model in order to send "
+"the template."
+msgstr ""
+"បើកំណត់ជម្រើសនេះ ប្រព័ន្ធនឹងបង្កើតសកម្មភាពជំនួយក្នុងម៉ូដែលពាក់ព័ន្ធ "
+"ដើម្បីផ្ញើអ៊ីមែលតាមគំរូ។"
+
+msgctxt "help:electronic.mail.wizard.templateemail.result,name:"
+msgid "Name of Header Field"
+msgstr "ឈ្មោះវាលបឋមកថា"
+
+msgctxt "help:electronic.mail.wizard.templateemail.start,attachments:"
+msgid "Attchments from user computer."
+msgstr "ឯកសារភ្ជាប់ពីកុំព្យូទ័ររបស់អ្នកប្រើ។"
+
+msgctxt "help:electronic.mail.wizard.templateemail.start,total:"
+msgid "Total emails to send"
+msgstr "ចំនួនអ៊ីមែលសរុបដែលត្រូវផ្ញើ"
+
+msgctxt "model:electronic.mail.wizard.templateemail.attachment,name:"
+msgid "Template Email Attachment"
+msgstr "ឯកសារភ្ជាប់សម្រាប់គំរូអ៊ីមែល"
+
+msgctxt "model:electronic.mail.wizard.templateemail.result,name:"
+msgid "Template Email Result"
+msgstr "លទ្ធផលផ្ញើអ៊ីមែលតាមគំរូ"
+
+msgctxt "model:electronic.mail.wizard.templateemail.start,name:"
+msgid "Template Email Start"
+msgstr "ចាប់ផ្ដើមផ្ញើអ៊ីមែលតាមគំរូ"
+
+msgctxt "model:ir.message,text:template_deleted"
+msgid "This template has been deactivated or deleted."
+msgstr "គំរូនេះត្រូវបានបិទ ឬលុបរួចហើយ។"
+
+msgctxt "view:electronic.mail.wizard.templateemail.start:"
+msgid "If the file is bigger than 25MB will not be attached."
+msgstr "ឯកសារដែលធំជាង 25MB នឹងមិនត្រូវបានភ្ជាប់ទេ។"
+
+msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,end:"
+msgid "Cancel"
+msgstr "បោះបង់"
+
+msgctxt "wizard_button:electronic_mail_wizard.templateemail,start,send:"
+msgid "Send"
+msgstr "ផ្ញើ"
+
+msgctxt "view:electronic.mail.wizard.templateemail.result:"
+msgid "VAT Information Exchange System Results"
+msgstr "លទ្ធផលប្រព័ន្ធផ្លាស់ប្ដូរព័ត៌មានអាករលើតម្លៃបន្ថែម"
+
+msgctxt "field:electronic.mail.wizard.templateemail.start,references:"
+msgid "In Repply To"
+msgstr "ឆ្លើយតបនឹង"
